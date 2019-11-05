@@ -27,7 +27,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
     {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
         //cv::imshow("View", cv_ptr->image);
-        lane->detectLane(cv_ptr->image).copyTo(out);
+        lane->updateLane(cv_ptr->image).copyTo(out);
         cv_ptr->image.copyTo(rgbImg);
 	    sign->signClassify(cv_ptr->image);
 	    /*Dirty code */

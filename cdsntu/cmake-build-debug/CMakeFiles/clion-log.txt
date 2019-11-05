@@ -1,4 +1,4 @@
-/snap/clion/88/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/quang/catkin_ws/src/cdsntu
+/snap/clion/92/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/quang/catkin_ws/src/cdsntu
 CMake Error at CMakeLists.txt:6 (find_package):
   By not providing "Findcatkin.cmake" in CMAKE_MODULE_PATH this project has
   asked CMake to find a package configuration file provided by "catkin", but

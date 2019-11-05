@@ -32,6 +32,15 @@ Mat DetectLane::cutROI(const Mat &src)
 
     return dst;
 }
+Mat DetectLane::detectShadow(const Mat &src)
+{
+    Mat shadow, shadowHSV;
+    cvtColor(src, shadowHSV, COLOR_BGR2HSV);
+    inRange(shadowHSV, Scalar(minShadow[0], minShadow[1], minShadow[2]),
+                        Scalar(maxShadow[0], maxShadow[1], maxShadow[2]), shadow);
+    return shadow;
+
+}
 Mat DetectLane::detectLane(const Mat &img)
 {
     Mat laneImg, hsvImg;
@@ -39,6 +48,14 @@ Mat DetectLane::detectLane(const Mat &img)
     inRange(hsvImg, Scalar(minThreshold[0],minThreshold[1],minThreshold[2]),
             Scalar(maxThreshold[0], maxThreshold[1], maxThreshold[2]), laneImg);
     laneImg = cutROI(laneImg).clone();
+    return laneImg;
+}
+Mat DetectLane::detectLane2(const Mat &src)
+{
+    Mat laneImg, hsvImg;
+    cvtColor(src, hsvImg, COLOR_BGR2HSV);
+    inRange(hsvImg, Scalar(minOther[0],minOther[1],minOther[2]),
+            Scalar(maxOther[0], maxOther[1], maxOther[2]), laneImg);
     return laneImg;
 }
 Mat DetectLane::birdView(const Mat &srcImg)
@@ -69,4 +86,17 @@ Mat DetectLane::showRes(const Mat &src) //For debug only
 {
 	Mat dst = detectLane(src).clone();
 	return birdView(dst);
+}
+Mat DetectLane::updateLane(const Mat &src)
+{
+    Mat lane = detectLane(src).clone();
+    Mat lane2 = detectLane2(src).clone();
+    Mat laneComb;
+    bitwise_or(lane, lane2, laneComb);
+    //bitwise_and(lane, laneComb, laneComb);
+    Mat shadow = detectShadow(src).clone();
+    Mat finalImg;
+    bitwise_or(laneComb, shadow, finalImg);
+    finalImg = cutROI(finalImg).clone();
+    return finalImg;
 }
