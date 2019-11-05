@@ -30,6 +30,12 @@ Mat DetectLane::cutROI(const Mat &src)
     fillConvexPoly(mask, pts, 4, Scalar(255));
     bitwise_and(src, mask, dst);
 
+    for(int i = rect.x; i <= rect.width; i++){
+        for(int j = rect.y; j<= rect.height; j++){
+            dst.at<uchar>(j,i) = 0;
+        }
+    }
+
     return dst;
 }
 Mat DetectLane::detectShadow(const Mat &src)
@@ -87,8 +93,9 @@ Mat DetectLane::showRes(const Mat &src) //For debug only
 	Mat dst = detectLane(src).clone();
 	return birdView(dst);
 }
-Mat DetectLane::updateLane(const Mat &src)
+Mat DetectLane::updateLane(const Mat &src, Rect obstacle)
 {
+    rect = obstacle;
     Mat lane = detectLane(src).clone();
     Mat lane2 = detectLane2(src).clone();
     Mat laneComb;

@@ -78,16 +78,20 @@ Rect DetectObstacle::detect(const Mat &bin, int area, int cut)
     }
     return obs;
 }
-void DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg)
+Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg)
 {
     Rect obs = null;
+    Rect rect = Rect(0,0,0,0);
     Mat rgb = rgbImg.clone();
     Mat grayImg = processDepth(depthImg).clone();
     Mat threshImg = threshDepthImg(grayImg);
     imshow("DepthBin", threshImg);
     Mat roiImg = roi(threshImg, 0, cut, threshImg.size().width, lenCut);
     obs = detect(roiImg, area, cut);
-    if(obs != null)
+    if(obs != null){
         rectangle(rgb, Point(obs.x, obs.y), Point(obs.x+obs.width, obs.y+obs.height), Scalar(255,0,0), 3);
+        rect = Rect(obs.x - bu, obs.y - bu, obs.x+obs.width + 2*bu, obs.y+obs.height + 2*bu);
+    }
     imshow("obstacle", rgb);
+    return rect;
 }

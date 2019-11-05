@@ -15,6 +15,8 @@ Mat rgbImg(240, 320, CV_8UC3, Scalar(0,0,0)), depthImg;
 /* Dirty code */
 vector<int> flag1;
 bool flag2 = false;
+int decision ;
+Rect rect = Rect(0,0,0,0);
 
 void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
@@ -26,26 +28,26 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
     {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
         //cv::imshow("View", cv_ptr->image);
-        lane->updateLane(cv_ptr->image).copyTo(out);
+        lane->updateLane(cv_ptr->image, rect).copyTo(out);
         cv_ptr->image.copyTo(rgbImg);
-	sign->signClassify(cv_ptr->image);
-	/*Dirty code */
-	_turn = sign->update(cv_ptr->image);
-        cout << "Turn: " << _turn << endl;
+	    sign->signClassify(cv_ptr->image);
+	    /*Dirty code */
+	    _turn = sign->update(cv_ptr->image);
+        cout<<_turn<<endl;
         if(_turn == 1 || _turn == 2)
         {
             flag1.push_back(1);
+            decision = _turn;
         }
         else flag1.push_back(0);
-        flag2 = false;
+
         if(flag1.size()>2)
             if(flag1[flag1.size()-1] == 0 && flag1[flag1.size()-2] == 1) flag2 = true;
             else flag2 = false;
-        if(flag2 == true)
-	    flag1.clear();
-        /*end dirty code*/
-        car->driveCar(out, velocity,_turn, flag2);
-	waitKey(1);
+
+
+        car->driveCar(out, velocity,decision, flag2);
+	    waitKey(1);
     }
     catch (cv_bridge::Exception& e)
     {
@@ -62,7 +64,7 @@ void depthCallback(const sensor_msgs::ImageConstPtr& msg)
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
         cv_ptr->image.copyTo(depthImg);
         out = cv_ptr->image.clone();
-        obstacle->showObj(out, rgbImg);
+        rect = obstacle->showObj(out, rgbImg);
 
 
         waitKey(1);
@@ -79,7 +81,7 @@ int main(int argc, char **argv)
     cv::namedWindow("sign");
     cv::namedWindow("Threshold Sign");
     cv::namedWindow("Threshold");
-    cv::namedWindow("Depth");
+    //cv::namedWindow("Depth");
     cv::namedWindow("DepthBin");
     cv::namedWindow("obstacle");
 

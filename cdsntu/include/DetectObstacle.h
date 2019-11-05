@@ -13,7 +13,7 @@ class DetectObstacle
         static Rect null;
         DetectObstacle();
         ~DetectObstacle();
-        void showObj(const Mat &depthImg, const Mat &rgbImg);
+        Rect showObj(const Mat &depthImg, const Mat &rgbImg);
 
     private:
         Mat processDepth(const Mat &depthImg);
@@ -25,10 +25,12 @@ class DetectObstacle
         Rect detect(const Mat &bin, int area, int cut = 40);
 
         int low = 35;
-        int up = 80;
-        int cut = 120;
+        int up = 110;
+        int cut = 50;
         int lenCut = 80;
-        int area = 2000;
+        int area = 100;
+        int bu = 20;
+
 
 
 };
