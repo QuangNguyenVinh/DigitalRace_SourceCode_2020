@@ -7,7 +7,7 @@ class ControlCar
     public:
         ControlCar();
         ~ControlCar();
-        void driveCar(const Mat &view, float velocity,bool flag, bool flag2);
+        void driveCar(const Mat &view, float velocity,int flag, bool flag2);
 
     private:
         ros::NodeHandle nodeObj1;

@@ -32,7 +32,7 @@ float ControlCar::getSteer(const Point &p)
     float steer = atan(dx/dy) * 57.32;
     return steer;
 }
-void ControlCar::driveCar(const Mat &view, float velocity,bool flag, bool flag2)
+void ControlCar::driveCar(const Mat &view, float velocity,int flag, bool flag2)
 {
     float errorAngle ;
     Point center(0,0);//Initial point to control
