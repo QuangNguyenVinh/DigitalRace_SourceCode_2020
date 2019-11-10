@@ -15,8 +15,9 @@ class DetectLane
 		Mat detectLane2(const Mat &src);
 		Mat birdView(const Mat &src);
 		Mat showRes(const Mat &src);
-        Mat updateLane(const Mat &src);
+        Mat updateLane(const Mat &src, Rect obstacle);
 	private:
+        Rect rect = Rect(0, 0, 0, 0);
 		int minThreshold[3] = {0, 0, 80};
 		int maxThreshold[3] = {179, 20, 125};
 		int minShadow[3] = {63, 0, 32};

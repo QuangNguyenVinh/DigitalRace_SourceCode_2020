@@ -11,10 +11,10 @@
   <component name="ChangeListManager">
     <list default="true" id="d1b9a88f-e80d-474a-9b3a-fe64b8f9eaaf" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/DetectLane.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/DetectLane.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/DetectObstacle.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/DetectObstacle.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DetectLane.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/DetectLane.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DetectObstacle.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/DetectObstacle.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -78,6 +78,8 @@
       <workItem from="1572955726460" duration="478000" />
       <workItem from="1572956961722" duration="94000" />
       <workItem from="1572957862936" duration="317000" />
+      <workItem from="1573042789623" duration="20000" />
+      <workItem from="1573390124951" duration="866000" />
     </task>
     <servers />
   </component>
@@ -96,16 +98,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/src/DetectLane.cpp</url>
-          <line>82</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
