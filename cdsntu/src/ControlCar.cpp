@@ -62,7 +62,7 @@ void ControlCar::driveCar(const Mat &view, float velocity,int flag, bool flag2)
 
         steerPub.publish(steer);
         speedPub.publish(speed);
-        sleep(4);
+        sleep(2);
     }
     steer.data = errorAngle;
     speed.data = velocity;

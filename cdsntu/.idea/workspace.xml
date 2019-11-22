@@ -12,10 +12,7 @@
     <list default="true" id="d1b9a88f-e80d-474a-9b3a-fe64b8f9eaaf" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/DetectLane.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/DetectLane.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/DetectObstacle.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/DetectObstacle.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DetectLane.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/DetectLane.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DetectObstacle.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/DetectObstacle.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ControlCar.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControlCar.cpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,7 +31,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../cdsntu1" />
     <property name="settings.editor.selected.configurable" value="configurable.group.build" />
   </component>
   <component name="RunDashboard">
@@ -80,6 +77,8 @@
       <workItem from="1572957862936" duration="317000" />
       <workItem from="1573042789623" duration="20000" />
       <workItem from="1573390124951" duration="866000" />
+      <workItem from="1573394318242" duration="28000" />
+      <workItem from="1574318651697" duration="278000" />
     </task>
     <servers />
   </component>
