@@ -1,0 +1,9 @@
+<launch>
+
+	<include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
+		<param name="port" value="9090"/>
+	</include>
+	<node name="roadml" pkg="roadml" type="roadML.py" output="screen" />
+	<node name="roadml_py" pkg="roadml" type="roadml_node" output="screen" args="_image_transport:=compressed" />
+
+</launch>
