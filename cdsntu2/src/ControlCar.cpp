@@ -23,7 +23,7 @@ Point ControlCar::getPoint(const Mat &src)
         midX += (int) ((left + right) / 2);
         midY += i;
     }
-    return Point((int) (midX / count), (int)(IMG_W/2) ); //(int) (midY / count)
+    return Point((int) (midX / count), (int)(IMG_H/2) ); //(int) (midY / count)
 }
 float ControlCar::getSteer(const Point &p)
 {
