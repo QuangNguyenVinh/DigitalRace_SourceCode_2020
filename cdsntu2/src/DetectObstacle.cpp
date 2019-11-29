@@ -79,7 +79,7 @@ Rect DetectObstacle::detect(const Mat &bin, int cut)
         for(int i = 0; i < contours.size(); i++)
         {
             Rect rc = boundingRect(contours[i]);
-            if(rc.height >= minHeight && rc.width >= minWidth)
+            if(rc.height >= minHeight && rc.width >= minWidth && rc.width < 160)
             {
                 obs = Rect(rc.x , rc.y + cut , rc.width, rc.height); // + cut because using ROI
                 rect.push_back(obs);
