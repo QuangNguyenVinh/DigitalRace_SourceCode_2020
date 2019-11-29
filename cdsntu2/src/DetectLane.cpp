@@ -50,10 +50,10 @@ Mat DetectLane::cutROI(const Mat &src)
 
     Point pts2[6] = {
             Point(0, h),
-	    Point(0, (int)(h*3/4)),
+	        Point(0, (int)(h*3/4)),
             Point(100, 100),
             Point(w - 100, 100),
-	    Point(w, (int)(h*3/4)),
+	        Point(w, (int)(h*3/4)),
             Point(w, h),
     };
 
@@ -174,12 +174,11 @@ Mat DetectLane::updateLane(const Mat &src, Rect obstacle)
             if (i < 120 || (j <= 50) || j >= (snow.cols - 50))
             {
                 snow.at<uchar>(i, j) = 0;
-                
             }
-	    if(lane.at<uchar>(i, j) == 255 && shadow.at<uchar>(i,j) == 0)
-		lane.at<uchar>(i, j) = 255;
-	    else
-		lane.at<uchar>(i, j) = 0;
+            if(lane.at<uchar>(i, j) == 255 && shadow.at<uchar>(i,j) == 0)
+		        lane.at<uchar>(i, j) = 255;
+	        else
+		        lane.at<uchar>(i, j) = 0;
         }
 
     bitwise_or(lane, shadow1, dst);

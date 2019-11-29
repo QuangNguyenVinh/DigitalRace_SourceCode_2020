@@ -25,16 +25,39 @@ Point ControlCar::getPoint(const Mat &src)
     }
     return Point((int) (midX / count), (int) (midY / count));
 }
+Point ControlCar::getPoint2(const Mat &src)
+{
+    int midX = 0, midY = 0;
+    int xLeft = 0, xRight = 0;
+    int count = 0;
+    int limit = (int) (IMG_H * 1 / 3);
+    for (int i = limit; i < IMG_H; i++) {
+        count += 1;
+        int left = IMG_W /2;
+        while (src.at<uchar>(i, left) == 255 && left > 0) {
+            left -= 1;
+            xLeft += 1;
+        }
+        int right = IMG_W / 2 + 1;
+        while (src.at<uchar>(i, right) == 255 && right < IMG_W - 1) {
+            right += 1;
+            xRight += 1;
+        }
+        midX += (int) ((xLeft + xRight) / 2);
+        midY += i;
+    }
+    return Point((int) (midX / count), (int) (midY / count));
+}
 float ControlCar::getSteer(const Point &p)
 {
     float dx = p.x - IMG_W/2 + 1;
     float dy = IMG_H - (float)p.y;
-    float steer = atan(dx/dy) * 57.32; // 180/PI
+    float steer = atan(dx/dy) * 57.32; // = 180/PI
     return steer;
 }
 float ControlCar::dynamicSpeed(const float &velocity, const float &steer)
 {
-    return velocity * cos(abs(steer)* 0.0174); //Pi/180
+    return velocity * cos(abs(steer)* 0.0174); // = Pi/180
 }
 void ControlCar::driveCar(const Mat &view, float velocity,int flag, bool flag2)
 {
@@ -42,11 +65,14 @@ void ControlCar::driveCar(const Mat &view, float velocity,int flag, bool flag2)
     Point center(0,0);//Initial point to control
 
     Mat dst = view.clone();
-    center = getPoint(view);
+    center = getPoint2(view);
     line(dst, center, Point((int)(IMG_W/2), (int)(IMG_H -1)), (0, 0, 0), 2);
     imshow("steer", dst);
 
     std_msgs::Float32 steer, speed;
+
+    errorAngle = getSteer(center)*0.72 - preSteer*0.28;
+    preSteer = errorAngle;
 
     errorAngle = getSteer(center);
     errorSpeed = dynamicSpeed(velocity, errorAngle);

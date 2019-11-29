@@ -10,7 +10,7 @@ DetectObstacle *obstacle;
 
 string path = ros::package::getPath("cdsntu2");
 string svmModel = path + "/model/svm.xml";
-Mat rgbImg(240, 320, CV_8UC3, Scalar(0,0,0)), depthImg;
+Mat rgbImg(240, 320, CV_8UC3, Scalar(0,0,0));
 Rect rect = Rect(0,0,0,0);
 /* Dirty code */
 vector<int> flag1;
@@ -27,6 +27,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
     {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
         view = cv_ptr->image.clone();
+        //imshow("RGB", cv_ptr->image);
         lane->updateLane(cv_ptr->image, rect).copyTo(out);
         cv_ptr->image.copyTo(rgbImg);
         sign->signClassify(cv_ptr->image);
@@ -69,11 +70,8 @@ void depthCallback(const sensor_msgs::ImageConstPtr& msg)
     try
     {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
-        cv_ptr->image.copyTo(depthImg);
         out = cv_ptr->image.clone();
         rect = obstacle->showObj2(out, rgbImg);
-
-
         waitKey(1);
     }
     catch (cv_bridge::Exception& e)
@@ -85,11 +83,11 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "cdsntu2");
     cv::namedWindow("steer");
-    cv::namedWindow("sign");
-    //cv::namedWindow("Threshold Sign");
+    cv::namedWindow("tb_Sign");
     cv::namedWindow("Threshold");
+    //cv::namedWindow("RGB");
     //cv::namedWindow("Depth");
-    //cv::namedWindow("DepthBin");
+    cv::namedWindow("DepthBin");
     cv::namedWindow("View");
 
     lane = new DetectLane();
