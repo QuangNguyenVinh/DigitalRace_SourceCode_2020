@@ -64,7 +64,7 @@ Rect DetectObstacle::findMaxRect(const vector<Rect> rect)
         }
     return rc;
 }
-Rect DetectObstacle::detect(const Mat &bin, int area, int cut)
+Rect DetectObstacle::detect(const Mat &bin, int cut)
 {
     Mat dst = bin.clone();
     vector< vector<Point> > contours;
@@ -79,7 +79,7 @@ Rect DetectObstacle::detect(const Mat &bin, int area, int cut)
         for(int i = 0; i < contours.size(); i++)
         {
             Rect rc = boundingRect(contours[i]);
-            if(rc.height >= minHeight && rc.width >= minWidth && rc.width <= 160)
+            if(rc.height >= minHeight && rc.width >= minWidth)
             {
                 obs = Rect(rc.x , rc.y + cut , rc.width, rc.height); // + cut because using ROI
                 rect.push_back(obs);
@@ -102,7 +102,7 @@ Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg)
 
     Mat roiImg = roi(threshImg, 0, cut, threshImg.size().width, lenCut);
 
-    obs = detect(roiImg, area, cut);
+    obs = detect(roiImg, cut);
     if(obs != null)
     {
         int wRect = obs.width , hRect = obs.height;
@@ -110,6 +110,44 @@ Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg)
         //rectangle(rgb, Point(obs.x, obs.y), Point(wRect, hRect), Scalar(0,0,255), 3);
 
         rect = Rect(obs.x - buW, obs.y - buH, wRect + 2*buW, hRect + 2*buH);
+
+        if(rect.x < 0)
+            rect.x = 0;
+
+        if(rect.width + rect.x > rgb.size().width)
+            rect.width = rgb.size().width - rect.x;
+
+        if(rect.y < 0)
+            rect.y = 0;
+
+        if(rect.height + rect.y > rgb.size().height)
+            rect.height = rgb.size().height - rect.y;
+
+    }
+    return rect;
+}
+Rect DetectObstacle::showObj2(const Mat &depthImg, const Mat &rgbImg) //Cai tien
+{
+    Rect obs = null;
+    Rect rect = Rect(0,0,0,0);
+
+    Mat rgb = rgbImg.clone();
+    Mat grayImg = processDepth(depthImg).clone();
+    Mat threshImg;
+    inRange(grayImg, 95, 255, threshImg);
+    bitwise_not(threshImg, threshImg);
+    imshow("Depth_Bin", threshImg);
+
+    Mat roiImg = roi(threshImg, 0, 90, threshImg.size().width, 90);
+
+    obs = detect(roiImg, 90);
+    if(obs != null)
+    {
+        int wRect = obs.width , hRect = obs.height;
+
+        //rectangle(rgb, Point(obs.x, obs.y), Point(wRect, hRect), Scalar(0,0,255), 3);
+
+        rect = Rect(obs.x - buW, obs.y - buH, wRect + 3*buW, hRect + 3*buH);
 
         if(rect.x < 0)
             rect.x = 0;

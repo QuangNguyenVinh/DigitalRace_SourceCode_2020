@@ -48,7 +48,16 @@ Mat DetectLane::cutROI(const Mat &src)
             Point(w, h),
     };
 
-    fillConvexPoly(mask, pts, 4, Scalar(255));
+    Point pts2[6] = {
+            Point(0, h),
+	    Point(0, (int)(h*3/4)),
+            Point(100, 100),
+            Point(w - 100, 100),
+	    Point(w, (int)(h*3/4)),
+            Point(w, h),
+    };
+
+    fillConvexPoly(mask, pts2, 6, Scalar(255));
     bitwise_and(src, mask, dst);
 
 
@@ -60,6 +69,16 @@ Mat DetectLane::detectShadow(const Mat &src)
     cvtColor(src, shadowHSV, COLOR_BGR2HSV);
     inRange(shadowHSV, Scalar(minShadow[0], minShadow[1], minShadow[2]),
                         Scalar(maxShadow[0], maxShadow[1], maxShadow[2]), shadow);
+    shadow = Filter(shadow);
+    return shadow;
+
+}
+Mat DetectLane::detectShadow1(const Mat &src)
+{
+    Mat shadow, shadowHSV;
+    cvtColor(src, shadowHSV, COLOR_BGR2HSV);
+    inRange(shadowHSV, Scalar(minShadow1[0], minShadow1[1], minShadow1[2]),
+                        Scalar(maxShadow1[0], maxShadow1[1], maxShadow1[2]), shadow);
     shadow = Filter(shadow);
     return shadow;
 
@@ -140,10 +159,11 @@ Mat DetectLane::erodeLane(const Mat &src)
 Mat DetectLane::updateLane(const Mat &src, Rect obstacle)
 {
     rect = obstacle;
-    Mat lane,snow,shadow,dst;
+    Mat lane,snow,shadow,shadow1,dst;
 
 
     shadow = detectShadow(src);
+    shadow1 = detectShadow1(src);
 
     snow = detectSnow(src);
 
@@ -154,12 +174,17 @@ Mat DetectLane::updateLane(const Mat &src, Rect obstacle)
             if (i < 120 || (j <= 50) || j >= (snow.cols - 50))
             {
                 snow.at<uchar>(i, j) = 0;
-                shadow.at<uchar>(i, j) = 0;
+                
             }
+	    if(lane.at<uchar>(i, j) == 255 && shadow.at<uchar>(i,j) == 0)
+		lane.at<uchar>(i, j) = 255;
+	    else
+		lane.at<uchar>(i, j) = 0;
         }
 
-    bitwise_or(snow, lane, dst);
-    bitwise_or(shadow, dst, dst);
+    bitwise_or(lane, shadow1, dst);
+    dst = Filter(dst).clone();
+    bitwise_or(snow, dst, dst);
     //dst = allBlack(dst, rect).clone();
     dst(rect) = Scalar(0);
     dst = cutROI(dst).clone();

@@ -8,7 +8,7 @@ ControlCar *car;
 DetectSign *sign;
 DetectObstacle *obstacle;
 
-string path = ros::package::getPath("cdsntu1");
+string path = ros::package::getPath("cdsntu2");
 string svmModel = path + "/model/svm.xml";
 Mat rgbImg(240, 320, CV_8UC3, Scalar(0,0,0)), depthImg;
 Rect rect = Rect(0,0,0,0);
@@ -41,7 +41,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
             flag1.push_back(1);
 	        decision = _turn;
             rectangle(view, sign->draw(), Scalar(255,0,0));
-            putText(view, ((_turn == 1)?"turn_left":"turn_right"),Point(sign->draw().x,sign->draw().y),CV_FONT_HERSHEY_COMPLEX_SMALL,0.8,Scalar(255,0,0));
+            putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),CV_FONT_HERSHEY_COMPLEX_SMALL,0.8,Scalar(0,255,0));
         }
         else flag1.push_back(0);
         flag2 = false;
@@ -71,7 +71,7 @@ void depthCallback(const sensor_msgs::ImageConstPtr& msg)
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
         cv_ptr->image.copyTo(depthImg);
         out = cv_ptr->image.clone();
-        rect = obstacle->showObj(out, rgbImg);
+        rect = obstacle->showObj2(out, rgbImg);
 
 
         waitKey(1);
@@ -83,13 +83,13 @@ void depthCallback(const sensor_msgs::ImageConstPtr& msg)
 }
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "cdsntu1");
+    ros::init(argc, argv, "cdsntu2");
     cv::namedWindow("steer");
     cv::namedWindow("sign");
     //cv::namedWindow("Threshold Sign");
     cv::namedWindow("Threshold");
     //cv::namedWindow("Depth");
-    cv::namedWindow("DepthBin");
+    //cv::namedWindow("DepthBin");
     cv::namedWindow("View");
 
     lane = new DetectLane();

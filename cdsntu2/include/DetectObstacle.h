@@ -14,6 +14,7 @@ public:
     DetectObstacle();
     ~DetectObstacle();
     Rect showObj(const Mat &depthImg, const Mat &rgbImg);
+    Rect showObj2(const Mat &depthImg, const Mat &rgbImg);
 
 private:
     Mat processDepth(const Mat &depthImg);
@@ -23,14 +24,14 @@ private:
     Mat filterObj(const Mat &src);
     Mat threshDepthImg(const Mat &gray);
     Rect findMaxRect(const vector<Rect> rect);
-    Rect detect(const Mat &bin, int area, int cut = 40);
+    Rect detect(const Mat &bin,int cut = 40);
 
     int low = 35;
     int up = 110;
     int cut = 50;
     int lenCut = 80;
     int area = 100;
-    int buW = 20, buH = 20;
+    int buW = 30, buH = 30;
     int minWidth = 20;
     int minHeight = 20;
 

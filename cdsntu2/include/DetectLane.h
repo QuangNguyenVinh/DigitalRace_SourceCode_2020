@@ -16,6 +16,7 @@ class DetectLane
         Mat Filter(const Mat &src);
         Mat cutROI(const Mat &src);
         Mat detectShadow(const Mat &src);
+	Mat detectShadow1(const Mat &src);
         Mat detectLane(const Mat &img);
         Mat detectLane2(const Mat &src);
         Mat detectSnow(const Mat &src);
@@ -36,7 +37,9 @@ class DetectLane
         int maxSnow[3] = {179, 45, 255};
         int minth[3] = { 0,0,25 };
         int maxth[3] = { 179,45,127 };
-        int minShadow[3] = {63, 0, 32};
+        int minShadow[3] = {25, 0, 32};
         int maxShadow[3] = {179, 100, 71};
+	int minShadow1[3] = {65, 0, 32};
+        int maxShadow1[3] = {179, 100, 71};
 };
 #endif
