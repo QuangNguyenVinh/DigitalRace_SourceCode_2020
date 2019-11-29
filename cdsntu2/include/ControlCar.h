@@ -21,7 +21,6 @@ class ControlCar
         float preSteer = 0;
 
         Point getPoint(const Mat &src);
-        Point getPoint2(const Mat &src);
         float getSteer(const Point &p);
         float dynamicSpeed(const float &velocity, const float &steer);
 };

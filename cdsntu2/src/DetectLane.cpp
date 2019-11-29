@@ -1,7 +1,7 @@
 #include "DetectLane.h"
 DetectLane::DetectLane()
 {
-	    cvCreateTrackbar("LowH", "Threshold", &minth[0], 179);
+	cvCreateTrackbar("LowH", "Threshold", &minth[0], 179);
         cvCreateTrackbar("HighH", "Threshold", &maxth[0], 179);
 
         cvCreateTrackbar("LowS", "Threshold", &minth[1], 255);
@@ -69,7 +69,7 @@ Mat DetectLane::detectShadow(const Mat &src)
     cvtColor(src, shadowHSV, COLOR_BGR2HSV);
     inRange(shadowHSV, Scalar(minShadow[0], minShadow[1], minShadow[2]),
                         Scalar(maxShadow[0], maxShadow[1], maxShadow[2]), shadow);
-    shadow = Filter(shadow);
+    //shadow = Filter(shadow);
     return shadow;
 
 }
@@ -79,7 +79,7 @@ Mat DetectLane::detectShadow1(const Mat &src)
     cvtColor(src, shadowHSV, COLOR_BGR2HSV);
     inRange(shadowHSV, Scalar(minShadow1[0], minShadow1[1], minShadow1[2]),
                         Scalar(maxShadow1[0], maxShadow1[1], maxShadow1[2]), shadow);
-    shadow = Filter(shadow);
+    //shadow = Filter(shadow);
     return shadow;
 
 }
@@ -89,7 +89,7 @@ Mat DetectLane::detectLane(const Mat &img)
     cvtColor(img, hsvImg, COLOR_BGR2HSV);
     inRange(hsvImg, Scalar(minth[0],minth[1],minth[2]),
             Scalar(maxth[0], maxth[1], maxth[2]), laneImg);
-    laneImg = Filter(laneImg);
+    //laneImg = Filter(laneImg);
     return laneImg;
 }
 Mat DetectLane::detectLane2(const Mat &src)
@@ -106,7 +106,7 @@ Mat DetectLane::detectSnow(const Mat &src)
     cvtColor(src, hsvImg, COLOR_BGR2HSV);
     inRange(hsvImg, Scalar(minSnow[0],minSnow[1],minSnow[2]),
             Scalar(maxSnow[0], maxSnow[1], maxSnow[2]), snowImg);
-    snowImg = Filter(snowImg);
+    //snowImg = Filter(snowImg);
     return snowImg;
 }
 Mat DetectLane::birdView(const Mat &srcImg)
@@ -163,11 +163,17 @@ Mat DetectLane::updateLane(const Mat &src, Rect obstacle)
 
 
     shadow = detectShadow(src);
+    shadow = Filter(shadow).clone();
+
     shadow1 = detectShadow1(src);
+    shadow1 = Filter(shadow1).clone();
 
     snow = detectSnow(src);
+    snow = Filter(snow).clone();
 
     lane = detectLane(src);
+    lane = Filter(lane).clone();
+
     for(int i =0 ;i<snow.rows;i++)
         for (int j = 0; j < snow.cols; j++)
         {

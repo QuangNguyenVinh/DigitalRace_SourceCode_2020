@@ -71,7 +71,7 @@ void depthCallback(const sensor_msgs::ImageConstPtr& msg)
     {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
         out = cv_ptr->image.clone();
-        rect = obstacle->showObj2(out, rgbImg);
+        rect = obstacle->showObj(out, rgbImg);
         waitKey(1);
     }
     catch (cv_bridge::Exception& e)
