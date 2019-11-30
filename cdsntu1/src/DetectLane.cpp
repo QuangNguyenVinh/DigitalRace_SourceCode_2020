@@ -1,7 +1,7 @@
 #include "DetectLane.h"
 DetectLane::DetectLane()
 {
-	    cvCreateTrackbar("LowH", "tb_lane", &minThreshold[0], 179);
+	cvCreateTrackbar("LowH", "tb_lane", &minThreshold[0], 179);
         cvCreateTrackbar("HighH", "tb_lane", &maxThreshold[0], 179);
 
         cvCreateTrackbar("LowS", "tb_lane", &minThreshold[1], 255);
@@ -156,6 +156,8 @@ Mat DetectLane::updateLane(const Mat &src, Rect obstacle)
     snow = detectSnow(src).clone();
     snow = erodeLane(snow).clone();
     snow(Rect(0, 0, snow.cols, 120)) = Scalar(0);
+    //snow(Rect(0,120, 50, snow.rows - 120)) = Scalar(0);
+    //snow(Rect(0, 120, snow.cols - 50, snow.rows - 120)) = Scalar(0); 
     //Process lane image
     lane = detectLane(src).clone();
     imshow("tb_lane", lane);
@@ -163,9 +165,11 @@ Mat DetectLane::updateLane(const Mat &src, Rect obstacle)
     lane = dilateLane(lane).clone();
     lane = removeNoise(lane).clone();
     //Process final image
-    finalImg = lane | snow;
-    removeNoise(finalImg);
+    finalImg = lane| snow;
+    finalImg = removeNoise(finalImg).clone();
+    imshow("final", finalImg);
     finalImg(rect) = Scalar(0);
+    //finalImg = cutROI(finalImg).clone();
     return finalImg;
 }
 

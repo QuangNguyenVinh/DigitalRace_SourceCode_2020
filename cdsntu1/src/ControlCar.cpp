@@ -30,7 +30,7 @@ Point ControlCar::getPoint2(const Mat &bin)
     int midX = 0, midY = 0, left = 0, right = 0, count = 0;
     int center = IMG_W / 2;
     int limit = (int) (IMG_H * 1 / 3);
-    for (int i = limit; i < IMG_H *2 / 3; i++) //160
+    for (int i = limit; i < IMG_H ; i++) //160
     {
         count += 1;
         left = 0, right = 0;
@@ -67,7 +67,7 @@ void ControlCar::driveCar(const Mat &view, float velocity,int flag, bool flag2)
     Point center(0,0);//Initial point to control
 
     Mat dst = view.clone();
-    center = getPoint2(view);
+    center = getPoint(view);
     line(dst, center, Point((int)(IMG_W/2), (int)(IMG_H -1)), (0, 0, 0), 2);
     imshow("steer", dst);
 
