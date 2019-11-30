@@ -57,7 +57,6 @@ Mat DetectLane::detectLane(const Mat &img)
     cvtColor(img, hsvImg, COLOR_BGR2HSV);
     inRange(hsvImg, Scalar(minThreshold[0],minThreshold[1],minThreshold[2]),
             Scalar(maxThreshold[0], maxThreshold[1], maxThreshold[2]), laneImg);
-    laneImg = cutROI(laneImg).clone();
     return laneImg;
 }
 Mat DetectLane::detectLane2(const Mat &src)
