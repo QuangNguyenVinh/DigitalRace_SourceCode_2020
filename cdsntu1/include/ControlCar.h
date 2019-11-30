@@ -1,0 +1,29 @@
+#ifndef CONTROLCAR_H
+#define CONTROLCAR_H
+
+#include "header.h"
+class ControlCar
+{
+    public:
+        ControlCar();
+        ~ControlCar();
+        void driveCar(const Mat &view, float velocity,int flag, bool flag2);
+
+    private:
+        ros::NodeHandle nodeObj1;
+        ros::NodeHandle nodeObj2;
+        ros::NodeHandle n;
+
+        ros::Publisher pub;
+        ros::Publisher steerPub;
+        ros::Publisher speedPub;
+
+
+        float preSteer = 0;
+
+        Point getPoint(const Mat &src);
+        Point getPoint2(const Mat &src);
+        float getSteer(const Point &p);
+        float dynamicSpeed(const float &velocity, const float &steer);
+};
+#endif
