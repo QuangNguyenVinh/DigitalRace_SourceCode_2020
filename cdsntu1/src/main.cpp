@@ -10,6 +10,8 @@ DetectObstacle *obstacle;
 
 string path = ros::package::getPath("cdsntu1");
 string svmModel = path + "/model/svm.xml";
+string maskSrc = path + "/model/mask.png";
+
 Mat rgbImg(240, 320, CV_8UC3, Scalar(0,0,0));
 Rect rect = Rect(0,0,0,0);
 /* Dirty code */
@@ -21,22 +23,30 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
 
     cv_bridge::CvImagePtr cv_ptr;
-    Mat out;
+    Mat out, view;
     int _turn = 0 ;
     try
     {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+        view = cv_ptr->image.clone();
         //cv::imshow("View", cv_ptr->image);
         lane->updateLane(cv_ptr->image, rect).copyTo(out);
         cv_ptr->image.copyTo(rgbImg);
+
+        //Publish sign data
         sign->signClassify(cv_ptr->image);
+
 	    /*Dirty code */
 	    _turn = sign->update(cv_ptr->image);
+
+        rectangle(view, rect, Scalar(0,0,255)); //Obstacles
 
         if(_turn == 1 || _turn == 2)
         {
             flag1.push_back(1);
 	        decision = _turn;
+            rectangle(view, sign->draw(), Scalar(255,0,0));
+            putText(view, ((_turn == 1)?"turn_left":"turn_right"),Point(sign->draw().x,sign->draw().y),CV_FONT_HERSHEY_COMPLEX_SMALL,0.8,Scalar(255,0,0));
         }
         else flag1.push_back(0);
         flag2 = false;
@@ -65,6 +75,8 @@ void depthCallback(const sensor_msgs::ImageConstPtr& msg)
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
         out = cv_ptr->image.clone();
         rect = obstacle->showObj(out, rgbImg);
+        //Publish obstacle data
+        obstacle->pubObstacle();
         waitKey(1);
     }
     catch (cv_bridge::Exception& e)
@@ -86,7 +98,7 @@ int main(int argc, char **argv)
     lane = new DetectLane();
     car = new ControlCar();
     sign = new DetectSign(svmModel);
-    obstacle = new DetectObstacle();
+    obstacle = new DetectObstacle(maskSrc);
     if (true) 
     {
         cv::startWindowThread();

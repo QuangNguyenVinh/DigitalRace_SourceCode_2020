@@ -1,9 +1,15 @@
 #include "DetectObstacle.h"
 Rect DetectObstacle::null = Rect();
-DetectObstacle::DetectObstacle()
+DetectObstacle::DetectObstacle(const string maskSrc)
 {
-    cvCreateTrackbar("Low", "tb_depth", &low, 255);
-    cvCreateTrackbar("High", "tb_depth", &up, 255);
+    //cvCreateTrackbar("Low", "tb_depth", &low, 255);
+    //cvCreateTrackbar("High", "tb_depth", &up, 255);
+    cvCreateTrackbar("value", "threshImg", &value,255);
+    mask = imread(maskSrc, IMREAD_COLOR);
+    cvtColor(mask, mask, COLOR_BGR2GRAY);
+
+    obsPub = obsNode.advertise<std_msgs::Bool>(OBSTACLE_TOPIC,1);
+
 }
 DetectObstacle::~DetectObstacle(){}
 Mat DetectObstacle::processDepth(const Mat &depthImg)
@@ -17,16 +23,35 @@ Mat DetectObstacle::revDepth(const Mat &depth)
     Mat dst = Scalar::all(255) - depth;
     return dst;
 }
-Mat DetectObstacle::thresh(const Mat &src, int val)
+Mat DetectObstacle::thresh(const Mat &src)
 {
     Mat dst;
-    threshold(src, dst, val, 255, 1);
+    threshold(src, dst, value, 255, 1);
     return dst;
 }
 Mat DetectObstacle::roi(const Mat &src, int x, int y, int w, int h)
 {
     Rect roi = Rect(x, y, w, h);
     Mat dst = src(roi);
+    return dst;
+}
+Mat DetectObstacle::roi2(const Mat &src)
+{
+    Mat dst;
+    int h = src.rows, w = src.cols;
+    Mat mask = Mat::zeros(src.size(), src.type());
+
+    Point pts[6] = {
+            Point(0, h),
+            Point(50, 120),
+            Point(80, 60),
+            Point(w - 80, 60),
+            Point(w - 50, 120),
+            Point(w, h)
+    };
+
+    fillConvexPoly(mask, pts, 6, Scalar(255));
+    bitwise_and(src, mask, dst);
     return dst;
 }
 Mat DetectObstacle::threshDepthImg(const Mat &gray)
@@ -81,14 +106,22 @@ Rect DetectObstacle::detect(const Mat &bin, int cut)
 Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg)
 {
     Rect obs = null;
+    obs_flag = false;
     Rect rect = Rect(0,0,0,0);
 
     Mat rgb = rgbImg.clone();
     Mat grayImg = processDepth(depthImg).clone();
-    Mat threshImg = threshDepthImg(grayImg);
-    imshow("tb_depth", threshImg);
-    Mat roiImg = roi(threshImg, 0, cut, threshImg.size().width, lenCut);
-    obs = detect(roiImg, cut);
+
+    Mat dst;
+    absdiff(grayImg, mask, dst);
+
+    //Mat threshImg = threshDepthImg(grayImg);
+    //imshow("tb_depth", threshImg);
+    //Mat roiImg = roi(threshImg, 0, cut, threshImg.size().width, lenCut);
+    Mat threshImg = thresh(dst);
+    Mat roiImg = roi2(threshImg);
+    imshow("threshImg", roiImg);
+    obs = detect(roiImg);
     if(obs != null)
     {
         int wRect = obs.width , hRect = obs.height;
@@ -108,7 +141,15 @@ Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg)
 
         if(rect.height + rect.y > rgb.size().height)
             rect.height = rgb.size().height - rect.y;
+
+        obs_flag = true;
     }
     //imshow("obstacle", rgb);
     return rect;
+}
+void DetectObstacle::pubObstacle()
+{
+    std_msgs::Bool hasObs;
+    hasObs.data = obs_flag;
+    obsPub.publish(hasObs);
 }
