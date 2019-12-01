@@ -61,6 +61,22 @@ float ControlCar::dynamicSpeed(const float &velocity, const float &steer)
 {
     return velocity * cos(abs(steer) * 0.0174); // = PI/180
 }
+float ControlCar::pid(const float &cte)
+{
+    error_i += cte;
+    error_d = cte - error_p;
+    error_p = cte;
+    return (k_p * error_p + k_i * error_i + k_d * error_d);
+}
+void ControlCar::pubSteerAndSpeed(const float &velocity, const float &errorAngle)
+{
+    std_msgs::Float32 steer, speed;
+    steer.data = errorAngle;
+    speed.data = velocity;
+
+    steerPub.publish(steer);
+    speedPub.publish(speed);
+}
 void ControlCar::driveCar(const Mat &view, float velocity,int flag, bool flag2)
 {
     float errorAngle , errorSpeed;
@@ -71,33 +87,27 @@ void ControlCar::driveCar(const Mat &view, float velocity,int flag, bool flag2)
     line(dst, center, Point((int)(IMG_W/2), (int)(IMG_H -1)), (0, 0, 0), 2);
     imshow("steer", dst);
 
-    std_msgs::Float32 steer, speed;
 
-    errorAngle = getSteer(center)*0.72 - preSteer*0.28;
-    preSteer = errorAngle;
+
+    //errorAngle = getSteer(center)*0.72 - preSteer*0.28;
+    //preSteer = errorAngle;
+    errorAngle = pid(center.x - IMG_W/2 + 1);
     errorSpeed = dynamicSpeed(velocity, errorAngle);
     if(flag2 == true)
     {
         if(flag == 1)
         {
             errorAngle = -20.0;
-            velocity = 40;
+            errorSpeed = 40;
         }
         else if(flag == 2)
         {
             errorAngle = 20.0;
-            velocity = 40;
+            errorSpeed = 40;
         }
-        steer.data = errorAngle;
-        speed.data = velocity;
-
-        steerPub.publish(steer);
-        speedPub.publish(speed);
+        pubSteerAndSpeed(errorSpeed, errorAngle);
         sleep(2);
     }
-    steer.data = errorAngle;
-    speed.data = velocity;
+    pubSteerAndSpeed(errorSpeed, errorAngle);
 
-    steerPub.publish(steer);
-    speedPub.publish(speed);
 }
