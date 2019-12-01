@@ -4,7 +4,7 @@ DetectObstacle::DetectObstacle(const string maskSrc)
 {
     //cvCreateTrackbar("Low", "tb_depth", &low, 255);
     //cvCreateTrackbar("High", "tb_depth", &up, 255);
-    cvCreateTrackbar("value", "threshImg", &value,255);
+    cvCreateTrackbar("value", "tb_depth", &value,255);
     mask = imread(maskSrc, IMREAD_COLOR);
     cvtColor(mask, mask, COLOR_BGR2GRAY);
 
@@ -26,7 +26,7 @@ Mat DetectObstacle::revDepth(const Mat &depth)
 Mat DetectObstacle::thresh(const Mat &src)
 {
     Mat dst;
-    threshold(src, dst, value, 255, 1);
+    threshold(src, dst, value, 255, THRESH_BINARY);
     return dst;
 }
 Mat DetectObstacle::roi(const Mat &src, int x, int y, int w, int h)
@@ -120,7 +120,7 @@ Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg)
     //Mat roiImg = roi(threshImg, 0, cut, threshImg.size().width, lenCut);
     Mat threshImg = thresh(dst);
     Mat roiImg = roi2(threshImg);
-    imshow("threshImg", roiImg);
+    imshow("tb_depth", roiImg);
     obs = detect(roiImg);
     if(obs != null)
     {
