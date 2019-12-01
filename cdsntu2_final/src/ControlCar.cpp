@@ -52,12 +52,24 @@ Point ControlCar::getPoint(const Mat &src, Rect rect)
                 midY = 200;
              else
                 midY = 140;   
-        cout << "midX: " << midX/count << "\t";
+        //cout << "midX: " << midX/count << "\t";
         //cout << "midY: " << midY << "\t";
         //cout << "Rect" << obs << endl;
     }
     return Point((int) (midX / count), (int) (midY));
 }
+float ControlCar::dynamicSpeed(const float &velocity, const float &steer)
+{
+    return velocity * cos(abs(steer) * 0.0174); // = PI/180
+}
+float ControlCar::pid(const float &cte)
+{
+    error_i += cte;
+    error_d = cte - error_p;
+    error_p = cte;
+    return (k_p * error_p + k_i * error_i + k_d * error_d);
+}
+
 float ControlCar::getSteer(const Point &p)
 {
     float dx = p.x - IMG_W/2 + 1;
@@ -65,10 +77,7 @@ float ControlCar::getSteer(const Point &p)
     float steer = atan(dx/dy) * 57.32; // 180/PI
     return steer;
 }
-float ControlCar::dynamicSpeed(const float &velocity, const float &steer)
-{
-    return velocity * cos(abs(steer)* 0.0174); //Pi/180
-}
+
 void ControlCar::driveCar(const Mat &view, float velocity,int flag, bool flag2, Rect obj, Rect sign)
 {
     int frame = 2;
@@ -87,11 +96,13 @@ void ControlCar::driveCar(const Mat &view, float velocity,int flag, bool flag2, 
 
     std_msgs::Float32 steer, speed;
 
-    errorAngle = getSteer(center)*0.7 - preSteer*0.3;
+    //errorAngle = getSteer(center)*0.7 - preSteer*0.3;
     preSteer = errorAngle;
     //if(abs(errorAngle) > 4)
         //errorAngle *= 2.5;
     
+    
+    errorAngle = pid(center.x - IMG_W/2 + 1);
     //errorSpeed = dynamicSpeed(velocity, errorAngle);
     steer.data = errorAngle;
     speed.data = velocity;
@@ -99,11 +110,20 @@ void ControlCar::driveCar(const Mat &view, float velocity,int flag, bool flag2, 
         temp = true;
         turn = flag;
     }
+    if(rectsign.x <= 276)
+    { 
+       errorSpeed = errorSpeed * 0.8;
+       steerPub.publish(steer);
+       
+    }
     
     if(temp == true && rectsign.x > 276 && rectsign.y > 50){
         int dem = rectsign.y;
+        
+        
+        
         if (dem < 64 )
-            delay = 0.16;
+            delay = 0.28;
         else{
             frame = 2;
             delay = 0.00;
@@ -113,6 +133,7 @@ void ControlCar::driveCar(const Mat &view, float velocity,int flag, bool flag2, 
         do {
            dem++;
            cout << "delay: " << delay << endl;
+          
            ros::Duration(float(delay)).sleep();
         }
         while (dem <= rectsign.y + 1);
@@ -124,12 +145,12 @@ void ControlCar::driveCar(const Mat &view, float velocity,int flag, bool flag2, 
         if (index <= frame){
             if(turn == 1){
 			    errorAngle = -40.0;
-                velocity = 35;
+                velocity = 40;
 
             }
             if (turn == 2){
 			    errorAngle = 40.0;
-                velocity = 35;
+                velocity = 40;
             }
 		steer.data = errorAngle;
 		speed.data = velocity;
@@ -141,7 +162,7 @@ void ControlCar::driveCar(const Mat &view, float velocity,int flag, bool flag2, 
 		    turn = 0;
 		    index = 0;
 		    }
-        ros::Duration(0.7).sleep();
+        ros::Duration(0.85).sleep();
         }
         
         }
