@@ -8,7 +8,7 @@ ControlCar *car;
 DetectSign *sign;
 DetectObstacle *obstacle;
 
-string path = ros::package::getPath("cdsntu1");
+string path = ros::package::getPath(TEAM_NAME);
 string svmModel = path + "/model/svm.xml";
 string maskSrc = path + "/model/mask.png";
 
@@ -86,7 +86,7 @@ void depthCallback(const sensor_msgs::ImageConstPtr& msg)
 }
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "cdsntu1");
+    ros::init(argc, argv, TEAM_NAME);
     cv::namedWindow("steer");
     cv::namedWindow("tb_sign");
     cv::namedWindow("tb_lane");
