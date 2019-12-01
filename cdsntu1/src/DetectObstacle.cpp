@@ -134,13 +134,13 @@ Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg)
             rect.x = 0;
 
         if(rect.width + rect.x > rgb.size().width)
-            rect.width = rgb.size().width - rect.x;
+            rect.width = rgb.size().width - rect.x - 1;
 
         if(rect.y < 0)
             rect.y = 0;
 
         if(rect.height + rect.y > rgb.size().height)
-            rect.height = rgb.size().height - rect.y;
+            rect.height = rgb.size().height - rect.y - 1;
 
         obs_flag = true;
     }

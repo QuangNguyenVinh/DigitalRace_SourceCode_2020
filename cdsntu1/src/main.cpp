@@ -57,7 +57,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 	        flag1.clear();
         /*end dirty code*/
         //cout << "Turn: " << _turn << " Flag: " << flag2 << " Decision: " << decision << endl ;
-        car->driveCar(out, velocity,decision, flag2);
+        car->driveCar(out, velocity,decision, flag2, rect);
 	    //waitKey(1);
     }
     catch (cv_bridge::Exception& e)

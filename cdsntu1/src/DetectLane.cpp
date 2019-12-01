@@ -167,7 +167,8 @@ Mat DetectLane::updateLane(const Mat &src, Rect obstacle)
     finalImg = lane| snow;
     //finalImg = removeNoise(finalImg).clone();
     finalImg(rect) = Scalar(0);
-    finalImg = cutROI(finalImg).clone();
+    //finalImg = cutROI(finalImg).clone();
+    finalImg(Rect(0, 0, 320, 80)) = Scalar(0);
     return finalImg;
 }
 
