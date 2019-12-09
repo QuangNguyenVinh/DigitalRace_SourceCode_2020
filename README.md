@@ -14,6 +14,7 @@ Description:
 + [CDSNTU2](cdsntu2): (update soon)
 + [CDSNTU2_bk1](cdsntu2_bk1): (update soon)
 + [CDSNTU2_final](cdsntu2_final): Complete 3 maps. (Warning: Not fix bugs yet(like using Rect(), using absolute path instead of relative path to read mask.png, etc...))
++ [cdsntu2_9_12_2019](cdsntu2_9_12_2019): Complete 4 maps. (something bug with pid, detect sign wrong)
 + [roadml](roadml): Using segmentation with python.
 
 
