@@ -16,7 +16,7 @@ Mat rgbImg(240, 320, CV_8UC3, Scalar(0,0,0));
 Rect rect = Rect(0,0,0,0);
 /* Dirty code */
 vector<int> flag1;
-bool flag2 = false;
+bool flag2 = false, flag3 = false;
 int decision = 0;
 /* End dirty code */
 void imageCallback(const sensor_msgs::ImageConstPtr& msg)
@@ -43,21 +43,26 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 
         if(_turn == 1 || _turn == 2)
         {
+            flag3 = true;
             flag1.push_back(1);
-	        decision = _turn;
+	    decision = _turn;
             rectangle(view, sign->draw(), Scalar(255,0,0));
-            putText(view, ((_turn == 1)?"turn_left":"turn_right"),Point(sign->draw().x,sign->draw().y),CV_FONT_HERSHEY_COMPLEX_SMALL,0.8,Scalar(255,0,0));
+            putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),CV_FONT_HERSHEY_COMPLEX_SMALL,0.8,Scalar(255,0,0));
         }
         else flag1.push_back(0);
         flag2 = false;
-        if(flag1.size()>2)
+        if(flag1.size() > 2)
             if(flag1[flag1.size()-1] == 0 && flag1[flag1.size()-2] == 1) flag2 = true;
             else flag2 = false;
         if(flag2 == true)
-	        flag1.clear();
+	{
+		flag1.clear();
+		flag3 = false;
+	}
+        cv::imshow("View", view);
         /*end dirty code*/
         //cout << "Turn: " << _turn << " Flag: " << flag2 << " Decision: " << decision << endl ;
-        car->driveCar(out, velocity,decision, flag2, rect);
+        car->driveCar(out, decision, flag2, rect);
 	    //waitKey(1);
     }
     catch (cv_bridge::Exception& e)

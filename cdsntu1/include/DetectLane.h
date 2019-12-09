@@ -29,7 +29,7 @@ class DetectLane
 	    int maxShadow[3] = {179, 100, 71};
 	    int minOther[3] = {0, 0, 80};
 	    int maxOther[3] = {179, 40, 125};
-        int minSnow[3] = {0, 0, 165};
-        int maxSnow[3] = {179, 45, 255};
+        int minSnow[3] = {15, 0, 165};
+        int maxSnow[3] = {29, 45, 255};
 };
 #endif

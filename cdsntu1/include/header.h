@@ -20,6 +20,10 @@
 #include <vector>
 #include <math.h>
 #include <algorithm>
+#include <chrono>
+#include <ctime>
+
+
 using namespace std;
 using namespace cv;
 using namespace cv::ml;
@@ -29,7 +33,7 @@ using namespace cv::ml;
 #define IMG_H 240
 
 #define PI 3.14f
-#define MIN_AREA 0.003f //For Sign Detect
+#define MIN_AREA 0.001f //For Sign Detect
 
 static string TEAM_NAME = "cdsntu1";
 static string SPEED_TOPIC = TEAM_NAME + "/set_speed";
@@ -47,6 +51,7 @@ static int BIRDVIEW_W = 240;
 static int BIRDVIEW_H = 320;
 static int sky = 90;
 
-static float velocity = 60;
+typedef  std::chrono::time_point<std::chrono::high_resolution_clock> time_point_t;
+
 
 #endif

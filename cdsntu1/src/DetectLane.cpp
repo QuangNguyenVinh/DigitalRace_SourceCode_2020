@@ -23,8 +23,8 @@ Mat DetectLane::cutROI(const Mat &src)
 
     Point pts[4] = {
             Point(0, h),
-            Point(100, 100),
-            Point(w - 100, 100),
+            Point(100, 80),
+            Point(w - 100, 80),
             Point(w, h),
     };
 
@@ -168,7 +168,7 @@ Mat DetectLane::updateLane(const Mat &src, Rect obstacle)
     //finalImg = removeNoise(finalImg).clone();
     finalImg(rect) = Scalar(0);
     //finalImg = cutROI(finalImg).clone();
-    finalImg(Rect(0, 0, 320, 80)) = Scalar(0);
+    finalImg(Rect(0, 0, 320, 100)) = Scalar(0);
     return finalImg;
 }
 

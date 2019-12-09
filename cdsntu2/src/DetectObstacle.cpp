@@ -1,9 +1,10 @@
 #include "DetectObstacle.h"
 Rect DetectObstacle::null = Rect();
-DetectObstacle::DetectObstacle()
+DetectObstacle::DetectObstacle(const string filePath)
 {
-    cvCreateTrackbar("Low", "DepthBin", &low, 255);
-    cvCreateTrackbar("High", "DepthBin", &up, 255);
+    cvCreateTrackbar("value", "threshImg", &value,255);
+    mask = imread(filePath, IMREAD_COLOR);
+    cvtColor(mask, mask, COLOR_BGR2GRAY);
 }
 DetectObstacle::~DetectObstacle(){}
 Mat DetectObstacle::processDepth(const Mat &depthImg)
@@ -12,44 +13,29 @@ Mat DetectObstacle::processDepth(const Mat &depthImg)
     cvtColor(depthImg, dst, COLOR_BGR2GRAY);
     return dst;
 }
-Mat DetectObstacle::rvDepth(const Mat &depth)
-{
-    Mat dst = Scalar::all(255) - depth;
-    return dst;
-}
-Mat DetectObstacle::thresh(const Mat &src, int val)
+Mat DetectObstacle::thresh(const Mat &src)
 {
     Mat dst;
-    threshold(src, dst, val, 255, 1);
+    threshold(src, dst, value, 255, THRESH_BINARY);
     return dst;
 }
-Mat DetectObstacle::roi(const Mat &src, int x, int y, int w, int h)
+Mat DetectObstacle::roi(const Mat &src)
 {
-    Rect roi = Rect(x, y, w, h);
-    Mat dst = src(roi);
-    return dst;
-}
-Mat DetectObstacle::filterObj(const Mat &src)
-{
-    Mat S1 = Mat::ones(9, 9, CV_8UC1);
-    S1.at<uchar>(5, 5) = 4;
-    Mat S2 = Mat::ones(15, 15, CV_8UC1);
-    //S2.at<uchar>(5, 5) = 4;
     Mat dst;
-    erode(src, dst, S1);
-    dilate(dst, dst, S2);
-    return dst;
-}
-Mat DetectObstacle::threshDepthImg(const Mat &gray)
-{
-    Mat dst = gray.clone();
-    for(int i = 0; i < gray.size().height; i++)
-        for(int j = 0; j < gray.size().width; j++)
-            if(gray.at<uchar>(i, j) > low && gray.at<uchar>(i, j) < up)
-                dst.at<uchar>(i, j) = 255;
-            else
-                dst.at<uchar>(i, j) = 0;
-    dst = filterObj(dst);
+    int h = src.rows, w = src.cols;
+    Mat mask = Mat::zeros(src.size(), src.type());
+
+    Point pts[6] = {
+            Point(0, h),
+            Point(50, 120),
+            Point(80, 60),
+            Point(w - 80, 60),
+            Point(w - 50, 120),
+            Point(w, h)
+    };
+
+    fillConvexPoly(mask, pts, 6, Scalar(255));
+    bitwise_and(src, mask, dst);
     return dst;
 }
 Rect DetectObstacle::findMaxRect(const vector<Rect> rect)
@@ -64,7 +50,7 @@ Rect DetectObstacle::findMaxRect(const vector<Rect> rect)
         }
     return rc;
 }
-Rect DetectObstacle::detect(const Mat &bin, int cut)
+Rect DetectObstacle::detect(const Mat &bin)
 {
     Mat dst = bin.clone();
     vector< vector<Point> > contours;
@@ -79,9 +65,9 @@ Rect DetectObstacle::detect(const Mat &bin, int cut)
         for(int i = 0; i < contours.size(); i++)
         {
             Rect rc = boundingRect(contours[i]);
-            if(rc.height >= minHeight && rc.width >= minWidth && rc.width < 160)
+            if(rc.height >= height && rc.width >= width && rc.width <= 160)
             {
-                obs = Rect(rc.x , rc.y + cut , rc.width, rc.height); // + cut because using ROI
+                obs = Rect(rc.x , rc.y, rc.width, rc.height);
                 rect.push_back(obs);
             }
         }
@@ -90,26 +76,27 @@ Rect DetectObstacle::detect(const Mat &bin, int cut)
     }
     return obs;
 }
+
 Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg)
 {
     Rect obs = null;
     Rect rect = Rect(0,0,0,0);
-
     Mat rgb = rgbImg.clone();
-    Mat grayImg = processDepth(depthImg).clone();
-    Mat threshImg = threshDepthImg(grayImg);
-    imshow("DepthBin", threshImg);
+    Mat grayImg = processDepth(depthImg);
+    Mat dst;
+    absdiff(grayImg, mask, dst);
+    Mat temp = roi(dst);
+    imshow("Depth", temp);
 
-    Mat roiImg = roi(threshImg, 0, cut, threshImg.size().width, lenCut);
-
-    obs = detect(roiImg, cut);
-    if(obs != null)
-    {
+    Mat threshImg = thresh(dst);
+    Mat roiImg = roi(threshImg);
+    imshow("threshImg", roiImg);
+    obs = detect(roiImg);
+    if(obs != null){
         int wRect = obs.width , hRect = obs.height;
 
-        //rectangle(rgb, Point(obs.x, obs.y), Point(wRect, hRect), Scalar(0,0,255), 3);
 
-        rect = Rect(obs.x - buW, obs.y - buH, wRect + 2*buW, hRect + 2*buH);
+        rect = Rect(obs.x - buW, obs.y - buH, wRect + 2*buW, hRect + 50);
 
         if(rect.x < 0)
             rect.x = 0;
@@ -122,45 +109,8 @@ Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg)
 
         if(rect.height + rect.y > rgb.size().height)
             rect.height = rgb.size().height - rect.y;
-
+        rectangle(rgb, rect, Scalar(0,0,255), 1);
     }
-    return rect;
-}
-Rect DetectObstacle::showObj2(const Mat &depthImg, const Mat &rgbImg) //Cai tien
-{
-    Rect obs = null;
-    Rect rect = Rect(0,0,0,0);
-
-    Mat rgb = rgbImg.clone();
-    Mat grayImg = processDepth(depthImg).clone();
-    Mat threshImg;
-    inRange(grayImg, 95, 255, threshImg);
-    bitwise_not(threshImg, threshImg);
-    imshow("Depth_Bin", threshImg);
-
-    Mat roiImg = roi(threshImg, 0, 90, threshImg.size().width, 90);
-
-    obs = detect(roiImg, 90);
-    if(obs != null)
-    {
-        int wRect = obs.width , hRect = obs.height;
-
-        //rectangle(rgb, Point(obs.x, obs.y), Point(wRect, hRect), Scalar(0,0,255), 3);
-
-        rect = Rect(obs.x - buW, obs.y - buH, wRect + 3*buW, hRect + 3*buH);
-
-        if(rect.x < 0)
-            rect.x = 0;
-
-        if(rect.width + rect.x > rgb.size().width)
-            rect.width = rgb.size().width - rect.x;
-
-        if(rect.y < 0)
-            rect.y = 0;
-
-        if(rect.height + rect.y > rgb.size().height)
-            rect.height = rgb.size().height - rect.y;
-
-    }
+    //imshow("obstacle", rgb);
     return rect;
 }

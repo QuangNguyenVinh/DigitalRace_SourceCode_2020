@@ -22,12 +22,16 @@ private:
     Rect rectSign = Rect(0,0,0,0);
     bool detect(const Mat &binImg);
     int useHOG_SVM(const Mat &grayImg);
+    Mat cutROI(const Mat &src);
 
     ros::NodeHandle signNode;
 
     ros::Publisher signPub;
 
 public:
+    
+    Rect getCenterSign(const Mat &src);
+    Rect getRect(const Mat &binImg);
     DetectSign(const string  svmModel);
     int update(const Mat &src);
     Rect draw();

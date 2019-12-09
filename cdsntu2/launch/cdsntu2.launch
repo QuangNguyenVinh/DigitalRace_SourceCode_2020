@@ -16,7 +16,7 @@ limitations under the License.
 <launch>
 
 	<include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
-		<param name="port" value="9090"/>
+		<port name="port" value="9090"/>
 	</include>
 
         <node name="cdsntu2" pkg="cdsntu2" type="cdsntu2_node" output="screen" args="_image_transport:=compressed" />

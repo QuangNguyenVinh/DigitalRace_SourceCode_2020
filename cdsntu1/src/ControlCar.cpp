@@ -5,6 +5,65 @@ ControlCar::ControlCar()
     speedPub = nodeObj2.advertise<std_msgs::Float32>(SPEED_TOPIC,1);
 }
 ControlCar::~ControlCar(){}
+Mat ControlCar::cutROI(const Mat &src)
+{
+    Mat dst;
+    int h = src.rows, w = src.cols;
+    Mat mask = Mat::zeros(src.size(), src.type());
+
+
+    Point pts[4] = {
+            Point(0, h),
+            Point(100, 100),
+            Point(w - 100, 100),
+            Point(w, h),
+    };
+
+    Point pts2[6] = {
+            Point(0, h),
+            Point(0, (int)(h*3/4)),
+            Point(100, 100),
+            Point(w - 100, 100),
+            Point(w, (int)(h*3/4)),
+            Point(w, h),
+    };
+
+    fillConvexPoly(mask, pts2, 6, Scalar(255));
+    bitwise_and(src, mask, dst);
+
+    return dst;
+}
+int ControlCar::getArea(const Mat &bin)
+{
+    Mat dst = bin(Rect(0,135, 320,2));
+    return countNonZero(dst);
+}
+int ControlCar::turnArea(const Mat &bin, int flagSign, int lowBound , int upperBound)
+{
+    int dem = 0;
+    if(flagSign == 1)
+    {
+	    for(int i = lowBound; i <= upperBound; i++)
+		    if( bin.at<uchar>(i,0) == 255)
+            {
+                dem++;
+            }
+		if(dem < (upperBound-lowBound) * 0.8)
+            return 1; //Small
+	    return 2; //Big
+	}
+    else if(flagSign == 2)
+	{
+	    for(int i = lowBound; i < upperBound; i++)
+		    if(bin.at<uchar>(i, 320) == 255)
+            {
+                dem++;
+            }
+		if(dem < (upperBound-lowBound) * 0.8) 
+            return 1; //Small    
+	    return 2; //Big
+	}
+}
 Rect ControlCar::danger_zone(const Rect &obs)
 {
    int area = 60;
@@ -12,15 +71,7 @@ Rect ControlCar::danger_zone(const Rect &obs)
    Rect rect = Rect(0,0,0,0);
    if (obs != Rect(0,0,0,0))
 	{
-	    rect = Rect(obs.x - area, obs.y, obs.x+ wRect + area, hRect + 20);
-	    if(rect.x < 0)
-            	rect.x = 0;
-	    if(rect.width + rect.x > IMG_W)
-            	rect.width = IMG_W - rect.x - 1;
-	    if(rect.y < 0)
-            	rect.y = 0;
-	    if(rect.height + rect.y > IMG_H)
-            	rect.height = IMG_H - rect.y - 1;         
+	    rect = Rect(obs.x - area, obs.y, obs.x+ wRect + area, hRect + 20);       
 	}
       
    return rect;
@@ -52,8 +103,7 @@ Point ControlCar::getPoint2(const Mat &src, Rect rect)
 {
     Rect obs = Rect(0,0,0,0);
     obs = danger_zone(rect);
-    
-    int flag = 1;
+
     int midX = 0, midY = 0;
     int count = 0;
     int limit = (int) (IMG_H * 1 / 5);
@@ -71,25 +121,26 @@ Point ControlCar::getPoint2(const Mat &src, Rect rect)
             right -= 1;
         }
         midX += (int) ((left + right) / 2);
-        int centerX = (int)(midX / count);
-        midY += i;
-        int centerY = midY/count;
-        //cout << "midX: " << midX/count << "\t";
-        
-        if (obs != Rect(0,0,0,0))
-	    if (centerX > obs.x && centerX < (obs.x + obs.width) && (obs.y > 40))
-		midY = 225;
-            else
-                midY = 190;
-        else    
-             if ((midX / count) < 159 || (midX / count) > 161)
-                midY = 200;
-             else
-                midY = 140;   
-        //cout << "midX: " << midX/count << "\t";
-        //cout << "midY: " << midY << "\t";
-        //cout << "Rect" << obs << endl;
+	midY += i;
+  
+    	int centerX = (int)(midX / count);
+
+    	if (obs != Rect(0,0,0,0))
+       		if (centerX > obs.x && centerX < (obs.x + obs.width) && (obs.y > 40))
+	   		midY = 225;
+       		else
+           		midY = 190;
+   	else    
+       		if ((midX / count) < 159 || (midX / count) > 161)
+           		midY = 220;
+       		else
+           		midY = 140;
+
     }
+
+        
+ 
+
     return Point((int) (midX / count), (int) (midY));
 }
 Point ControlCar::getPoint3(const Mat &bin) //Don't use this function!!!
@@ -130,10 +181,13 @@ Point ControlCar::dangerPoint(const Mat &bin, int flag) //Don't use this functio
 	bool turn_left = false;
 	bool turn_right = false;
 	float roi = 2 / 3;
-
-	if(flag == 1 || flag == 2)
-	{
-	    turn_left = true;
+	if(flag == 1) 
+	{    
+	     turn_left = true;
+        
+	}
+        else if(flag == 2)
+        {
 	    turn_right = true;
 	}
 	while (i - border > 0)
@@ -148,8 +202,7 @@ Point ControlCar::dangerPoint(const Mat &bin, int flag) //Don't use this functio
 	{
 		i = int(IMG_H * roi);
 	}
-	if(flag != 1 && flag != 2)
-	{
+
 	    while (i_l <= IMG_W / 2)
 	    {
 		    Mat check = bin(Rect(i_l - border, i - border, 2*border + 1, 2*border + 1));
@@ -182,13 +235,14 @@ Point ControlCar::dangerPoint(const Mat &bin, int flag) //Don't use this functio
 		    else
 			    i_r -= (border + 1);
 	    }
-	}
+
 	if (turn_left == false && turn_right == false)
 	{
 		return Point(int((i_l + i_r) / 2), i);
 	}
 	else if (turn_left == true && turn_right == true)
 	{
+
 		if (flag == 2) //Turn right
 		{
 			while (bin.at<uchar>(i, i_r) == 255 && i > 0)
@@ -196,6 +250,7 @@ Point ControlCar::dangerPoint(const Mat &bin, int flag) //Don't use this functio
 				i -= 1;
 			}
 			return Point(i_r, i);
+
 		}
 		else if (flag == 1) //Turn left
 		{
@@ -231,82 +286,154 @@ float ControlCar::getSteer(const Point &p)
     float dx = p.x - IMG_W/2 + 1;
     float dy = IMG_H - (float)p.y;
     float steer = atan(dx/dy) * 57.32; // = 180/PI
+    
+    if(steer < -60)
+        return -60.0f;
+    if(steer > 60)
+        return 60.0f;
     return steer;
 }
-float ControlCar::dynamicSpeed(const float &velocity, const float &steer)
+bool ControlCar::checkLeftTurn(const Mat &bin, Rect leftRect)
 {
-    return velocity * cos(abs(steer) * 0.0174); // = PI/180
+    Mat left = bin(leftRect);
+    imshow("Left", left);
+    cout << "Left: " << countNonZero(left) << endl;
+    if(countNonZero(left) > (leftRect.area() * 0.8))
+        return true;
+    return false;
+}
+bool ControlCar::checkRightTurn(const Mat &bin, Rect rightRect)
+{
+    Mat right = bin(rightRect);
+    imshow("Right", right);
+    cout << "Right: " << countNonZero(right) << endl;
+    if(countNonZero(right) > (rightRect.area() * 0.8))
+        return true;
+    return false;
+}
+float ControlCar::dynamicSpeed(const float &v, const float &steer)
+{
+    return v * cos(abs(steer) * 0.0174); // = PI/180
 }
 float ControlCar::pid(const float &cte)
 {
     error_i += cte;
     error_d = cte - error_p;
     error_p = cte;
-    return (k_p * error_p + k_i * error_i + k_d * error_d);
+    float pid = (k_p * error_p + k_i * error_i + k_d * error_d);
+    if(pid > 60)
+	return 60.0f;
+    if(pid < -60)
+        return -60.0f;
+    return pid;
+
+
 }
-void ControlCar::pubSteerAndSpeed(const float &velocity, const float &errorAngle)
+void ControlCar::pubSteerAndSpeed(const float &v, const float &errorAngle)
 {
     std_msgs::Float32 steer, speed;
     steer.data = errorAngle;
-    speed.data = velocity;
+    speed.data = v;
 
     steerPub.publish(steer);
     speedPub.publish(speed);
 }
-void ControlCar::driveCar(const Mat &view, float velocity,int flag, bool flag2, Rect rect)
+void ControlCar::driveCar(const Mat &view, int flag, bool flag2, Rect rect)
 {
-    float errorAngle , errorSpeed;
+    float errorAngle , errorSpeed, velocity = 60, brake = 0;
     Point center(0,0);//Initial point to control
-    Mat dst = view.clone();
+    Mat dst = view.clone(), dst2 = view.clone();
+    int white = getArea(dst);
 
+    
+    
+    
+    bool leftTurn = checkLeftTurn(dst, Rect(0,130,40,50));
+    bool rightTurn = checkRightTurn(dst, Rect(IMG_W - 40, 130, 40, 50));
     center = getPoint2(dst, rect);
 
 
-    if(flag2 == true)
-    {
-       current_flag = true; 
-       begin = ros::Time::now().toSec();   
-    }
-    if(current_flag == true)
-    {
-        double end = ros::Time::now().toSec();
-        if(end - begin <= 3 && end - begin > 0.05)
-        {
-                center = dangerPoint(dst, flag);
-        }
-        else if(end - begin > 3)
-        {
-            begin = 0;
-            current_flag = false;
-        }
-    }
-
-    
-    line(dst, center, Point((int)(IMG_W/2), (int)(IMG_H -1)), (0, 0, 0), 2);
+    line(dst2, center, Point((int)(IMG_W/2), (int)(IMG_H -1)), (0, 0, 0), 2);
     imshow("steer", dst);
 
 
-
+    //errorAngle = pid(getSteer(center));
     //errorAngle = getSteer(center)*0.72 - preSteer*0.28;
     //preSteer = errorAngle;
-    errorAngle = pid(center.x - IMG_W/2 + 1);
-    errorSpeed = dynamicSpeed(velocity, errorAngle);
-    /*if(flag2 == true)
-    {
-        if(flag == 1)
-        {
-            errorAngle = -20.0;
-            errorSpeed = 40;
-        }
-        else if(flag == 2)
-        {
-            errorAngle = 20.0;
-            errorSpeed = 40;
-        }
-        pubSteerAndSpeed(errorSpeed, errorAngle);
-        sleep(2);
-    }*/
 
-    pubSteerAndSpeed(errorSpeed, errorAngle);
+    	
+
+    errorSpeed = dynamicSpeed(velocity, errorAngle);
+
+    if(flag2 == true)
+    {
+        current_flag = true;
+        turnSign = flag;
+        begin = ros::Time::now().toSec();
+
+    }
+    if(current_flag == false) 
+    {
+    	errorAngle = pid(center.x - IMG_W/2 + 1);
+       	pubSteerAndSpeed(errorSpeed, errorAngle);
+    }
+
+    else if (current_flag == true)
+    {
+	    cout << "White: " << white << endl;
+        errorSpeed = 40;
+        if(white > 500)
+        {
+            if(turnSign == 1)
+                errorAngle = -60;
+            else if(turnSign == 2)
+                errorAngle = 60;
+            pubSteerAndSpeed(errorSpeed, errorAngle);
+            isSleep = true;
+        }
+        else if(isSleep == true)
+        {
+            double time_to_sleep = 0;
+            if(turnArea(dst, turnSign) == 1)
+            {
+                if(turnSign == 1)
+                    errorAngle = -30;
+                else if(turnSign == 2)
+                    errorAngle = 30;
+	            time_to_sleep = 1.0;
+                cout << "Small Area \n";
+	        }
+	        else
+            {
+                if(turnSign == 1)
+                    errorAngle = -20;
+                else if(turnSign == 2)
+                    errorAngle = 20;
+                time_to_sleep = 0.5;
+                cout << "Large Area \n";
+	        }
+            begin = 0;
+            current_flag = false;
+            turnSign = 0;
+            isSleep = false;
+	        pubSteerAndSpeed(errorSpeed, errorAngle);
+            ros::Duration(time_to_sleep).sleep();
+        }
+        else if(isSleep == false)
+        {
+            center = getPoint2(dst, rect);
+	        errorAngle = pid(center.x - IMG_W/2 + 1);
+            pubSteerAndSpeed(errorSpeed, errorAngle);	
+	}
+        
+
+    }
+
+
+
+
+
+    	
+
 
 }

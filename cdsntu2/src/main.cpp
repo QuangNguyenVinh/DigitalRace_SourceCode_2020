@@ -3,57 +3,110 @@
 #include "ControlCar.h"
 #include "DetectSign.h"
 #include "DetectObstacle.h"
+#include <string.h>
+#include <stdlib.h>
 DetectLane *lane;
 ControlCar *car;
 DetectSign *sign;
 DetectObstacle *obstacle;
 
-string path = ros::package::getPath("cdsntu2");
+string path = ros::package::getPath(TEAM_NAME);
 string svmModel = path + "/model/svm.xml";
-Mat rgbImg(240, 320, CV_8UC3, Scalar(0,0,0));
+string maskDepth = path + "/model/src.png";
+Mat rgbImg(240, 320, CV_8UC3, Scalar(0,0,0)), depthImg;
 Rect rect = Rect(0,0,0,0);
+Rect _rectsign = Rect(0,0,0,0);
 /* Dirty code */
 vector<int> flag1;
 bool flag2 = false;
+bool flag3 = false;
 int decision = 0;
+int check = 0;
+string name ="";
+int white = 0;
+int white1 = 0;
 /* End dirty code */
+
 void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
 
     cv_bridge::CvImagePtr cv_ptr;
-    Mat out, view;
+    Mat out, out1, view;
     int _turn = 0 ;
     try
     {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
         view = cv_ptr->image.clone();
-        //imshow("RGB", cv_ptr->image);
         lane->updateLane(cv_ptr->image, rect).copyTo(out);
+        lane->noCutFinal(cv_ptr->image).copyTo(out1);
         cv_ptr->image.copyTo(rgbImg);
+        
         sign->signClassify(cv_ptr->image);
 	    /*Dirty code */
 	    _turn = sign->update(cv_ptr->image);
-
-
-        rectangle(view, rect, Scalar(0,0,255)); //Obstacles
-
-        if(_turn == 1 || _turn == 2)
+         for ( int i = 150 ; i < 180 ; i++)
         {
+           for (int j = 0; j < 320 ; j++)
+               if (out1.at<uchar>(i, j) == 255)
+                   white++;
+        }
+        //cout<<white<<endl;
+        
+        
+            for ( int i = 80; i < 95; i++)
+            {
+            for (int j = 0; j < 160 ; j++)
+                if (out1.at<uchar>(i, j) == 255)
+                   white1++;
+            }
+        
+        
+        rectangle(view, rect, Scalar(0,0,255)); //Obstacles
+        
+        if(_turn == 1 || _turn == 2)
+        {   
+            
+            name = to_string(check) + ".jpg";
+            cout<<name<<endl;
+            imwrite(name, view);
+            _rectsign = sign->getCenterSign(cv_ptr->image);
+            //cout << _rectsign << endl;
             flag1.push_back(1);
 	        decision = _turn;
             rectangle(view, sign->draw(), Scalar(255,0,0));
-            putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),CV_FONT_HERSHEY_COMPLEX_SMALL,0.8,Scalar(0,255,0));
+            putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),CV_FONT_HERSHEY_COMPLEX_SMALL,              0.8,Scalar(255,0,0));
+            name = to_string(check) + "_sign.jpg";
+            imwrite(name, view);
+            flag2 = true;
         }
-        else flag1.push_back(0);
-        flag2 = false;
-        if(flag1.size()>2)
-            if(flag1[flag1.size()-1] == 0 && flag1[flag1.size()-2] == 1) flag2 = true;
-            else flag2 = false;
+        else {
+            flag1.push_back(0);
+            flag2 = false;
+        }
+            
+        
+        
+        //if(flag1.size()>2)
+            //if(flag1[flag1.size()-1] == 0 && flag1[flag1.size()-2] == 1) flag2 = true;
+            //else flag2 = false;
         if(flag2 == true)
-	        flag1.clear();
+                {
+	            flag1.clear();
+                
+                //cout << "rectSign: " << _rectsign << endl;
+                //cout << check << endl;
+                 }
+      
+        
         /*end dirty code*/
-        cout << "Turn: " << _turn << " Flag: " << flag2 << " Decision: " << decision << endl ;
-        car->driveCar(out, velocity,decision, flag2);
+        
+        //cout << "Turn: " << _turn << " Flag: " << flag2 << " Decision: " << decision << endl ;
+        cout<<white1<< "\t" << white << '\t' << flag2 << endl;
+        car->driveCar(out,out1, velocity,decision, flag2, rect, _rectsign);
+        check++;
+        white = 0;
+        white1 = 0;
+        //video.write(view);
         imshow("View", view);
 	    //waitKey(1);
     }
@@ -70,8 +123,11 @@ void depthCallback(const sensor_msgs::ImageConstPtr& msg)
     try
     {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
+        cv_ptr->image.copyTo(depthImg);
         out = cv_ptr->image.clone();
         rect = obstacle->showObj(out, rgbImg);
+
+
         waitKey(1);
     }
     catch (cv_bridge::Exception& e)
@@ -81,19 +137,19 @@ void depthCallback(const sensor_msgs::ImageConstPtr& msg)
 }
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "cdsntu2");
+    ros::init(argc, argv, TEAM_NAME);
     cv::namedWindow("steer");
-    cv::namedWindow("tb_Sign");
+    cv::namedWindow("sign");
+    //cv::namedWindow("Threshold Sign");
     cv::namedWindow("Threshold");
-    //cv::namedWindow("RGB");
-    //cv::namedWindow("Depth");
+    cv::namedWindow("threshImg");
     cv::namedWindow("DepthBin");
     cv::namedWindow("View");
 
     lane = new DetectLane();
     car = new ControlCar();
     sign = new DetectSign(svmModel);
-    obstacle = new DetectObstacle();
+    obstacle = new DetectObstacle(maskDepth);
     if (true) 
     {
         cv::startWindowThread();

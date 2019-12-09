@@ -22,20 +22,15 @@ class DetectObstacle
         Mat processDepth(const Mat &depthImg);
         Mat revDepth(const Mat &depth);
         Mat thresh(const Mat &src);
-        Mat roi(const Mat &src, int x, int y, int w, int h);
-        Mat roi2(const Mat &src);
-        Mat threshDepthImg(const Mat &gray);
+        Mat roi(const Mat &src);
         Rect findMaxRect(const vector<Rect> rect);
-        Rect detect(const Mat &bin, int cut = 0);
+        Rect detect(const Mat &bin);
 
         int value = 80;
-        int low = 35;
-        int up = 110;
-        //int cut = 50;
-        int lenCut = 80;
-        int area = 100;
-        int buW = 30, buH = 30;
-        int minWidth = 20;
+
+  
+        int buW = 30, buH = 20;
+        int minWidth = 30;
         int minHeight = 20;
 
         ros::NodeHandle obsNode;
