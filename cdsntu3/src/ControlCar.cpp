@@ -210,14 +210,17 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1, int flag, bool flag
     
     if (temp == true)
     {
-        pubSpeed(30);
+        velocity = 30;
+        pubSpeed(velocity);
         if (white < 9600)
         {
-            pubSpeed(55);
+            velocity = 55;
+            pubSpeed(velocity);
         }
         
         if(turn == 1 && flagLeftTurn == true){
             errorAngle = -30.0;
+            velocity = SPEED_TURN;
             cout << "Turn-left!!!" << endl;
             pubSpeedAndSteer(SPEED_TURN, errorAngle);   
             if (leftTurn == true)
@@ -233,8 +236,9 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1, int flag, bool flag
         
         if (turn == 2 && flagRightTurn == true){
 		    errorAngle = 30.0;
+            velocity = SPEED_TURN;
             cout << "Turn-right!!!" << endl;
-            pubSpeedAndSteer(SPEED_TURN, errorAngle);
+            pubSpeedAndSteer(velocity, errorAngle);
             if (rightTurn == true)
             {
                 turn = 0;
