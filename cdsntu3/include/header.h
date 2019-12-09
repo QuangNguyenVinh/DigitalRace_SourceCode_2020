@@ -30,7 +30,7 @@ using namespace cv::ml;
 #define PI 3.14f
 #define MIN_AREA 0.0005f //For Sign Detect
 
-#define SPEED_TURN -100
+static float SPEED_TURN = -100;
 
 
 
