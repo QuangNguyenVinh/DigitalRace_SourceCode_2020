@@ -21,11 +21,13 @@ DetectSign::DetectSign(const string svmModel)
 }
 
 
-int DetectSign::UpdateFromCircle(const Mat &src, vector<Vec3f> circles){
+int DetectSign::UpdateFromCircle(const Mat &src, vector<Vec3f> circles)
+{
     
     rects.clear();
     rects.resize(circles.size());
-    for(int i = 0; i < circles.size(); i++ ){
+    for(int i = 0; i < circles.size(); i++ )
+    {
         Vec3i c = circles[i];
         Point center = Point(c[0], c[1]);
         int radius = c[2];

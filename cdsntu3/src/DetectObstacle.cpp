@@ -79,7 +79,7 @@ Rect DetectObstacle::detect(const Mat &bin)
 
 vector<Vec3f> DetectObstacle::RectSign(const Mat &depthImg){
     int _min = 10, _max = 318;
-    vector<Vec3f> circles;
+    vector<Vec3f> circles(0);
     Mat dst;
     Mat gray = processDepth(depthImg);
     absdiff(gray,mask, gray);

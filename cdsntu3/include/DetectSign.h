@@ -28,10 +28,9 @@ private:
     ros::Publisher signPub;
 
 public:
-    
+    DetectSign(const string  svmModel);
     Rect getCenterSign(const Mat &src);
     Rect getRect(const Mat &binImg);
-    DetectSign(const string  svmModel);
     int update(const Mat &src);
     int UpdateFromCircle(const Mat &src, vector<Vec3f> circles);
     Rect draw();

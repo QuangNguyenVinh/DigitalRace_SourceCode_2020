@@ -12,7 +12,7 @@ DetectObstacle *obstacle;
 
 string path = ros::package::getPath(TEAM_NAME);
 string svmModel = path + "/model/svm.xml";
-string maskSrc = path + "model/mask.png";
+string maskSrc = path + "/model/mask.png";
 
 Mat rgbImg(240, 320, CV_8UC3, Scalar(0,0,0));
 Rect rect = Rect(0,0,0,0);
@@ -46,7 +46,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         //sign->signClassify(cv_ptr->image);
 	    /*Dirty code */
         cout<<"circles size: " << circles.size() << endl;
-        if(circles.size() != 0)
+        if(circles.size() > 0)
 	        _turn = sign->UpdateFromCircle(cv_ptr->image, circles);
         
         rectangle(view, rect, Scalar(0,0,255)); //Obstacles
@@ -66,7 +66,8 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
             //imwrite(name, view);
             flag2 = true;
         }
-        else {
+        else 
+        {
             flag1.push_back(0);
             flag2 = false;
         }
@@ -77,12 +78,12 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
             //if(flag1[flag1.size()-1] == 0 && flag1[flag1.size()-2] == 1) flag2 = true;
             //else flag2 = false;
         if(flag2 == true)
-                {
+            {
 	            flag1.clear();
                 
                 //cout << "rectSign: " << _rectsign << endl;
                 //cout << check << endl;
-                 }
+            }
       
         
         /*end dirty code*/
@@ -90,6 +91,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         //cout << "Turn: " << _turn << " Flag: " << flag2 << " Decision: " << decision << endl ;
         //cout<<white1<< "\t" << white << '\t' << flag2 << endl;
         car->driveCar(out,out1,decision, flag2, rect);
+
         check++;
         white = 0;
         white1 = 0;
