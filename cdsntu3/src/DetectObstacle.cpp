@@ -125,17 +125,11 @@ Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg)
 
         rect = Rect(obs.x - buW, obs.y - buH, wRect + 2*buW, hRect + 50);
 
-        if(rect.x < 0)
-            rect.x = 0;
+        rect.x = max(0, rect.x);
+        rect.y = max(0, rect.y);
+        rect.width = min(rgb.size().width - rect.x, rect.width);
+        rect.height = min(rgb.size().height - rect.y, rect.height);
 
-        if(rect.width + rect.x > rgb.size().width)
-            rect.width = rgb.size().width - rect.x;
-
-        if(rect.y < 0)
-            rect.y = 0;
-
-        if(rect.height + rect.y > rgb.size().height)
-            rect.height = rgb.size().height - rect.y;
         rectangle(rgb, rect, Scalar(0,0,255), 1);
     }
     //imshow("obstacle", rgb);

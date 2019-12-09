@@ -32,6 +32,12 @@ int DetectSign::UpdateFromCircle(const Mat &src, vector<Vec3f> circles)
         Point center = Point(c[0], c[1]);
         int radius = c[2];
         rects[i] = Rect(center.x - radius, center.y - radius, 2 * radius, 2 * radius);
+
+        //For limit rect size
+        rects[i].x = max(0, rects[i].x);
+        rects[i].y = max(0, rects[i].y);
+        rects[i].width = min(src.size().width - rects[i].x, rects[i].width);
+        rects[i].height = min(src.size().height - rects[i].y, rects[i].height);
     }
     Mat hsvImg, grayImg;
     Mat dst = src.clone();
