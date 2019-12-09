@@ -144,7 +144,6 @@ void ControlCar::pubSpeedAndSteer(const float &veloc, const float &angle)
 }
 void ControlCar::driveCar(const Mat &view, const Mat &view1, int flag, bool flag2, Rect obj)
 {
-    float velocity = 60;
     cout << "============DeBug=============" << endl;
     float errorAngle = 0 , errorSpeed;
     Point center(0,0);//Initial point to control

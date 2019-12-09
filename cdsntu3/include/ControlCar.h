@@ -21,13 +21,12 @@ class ControlCar
         ros::Publisher speedPub;
 
         float preSteer = 0;
+        float velocity = 60;
         
         float k_p = 0.7;
         float k_i = 0.01;
         float k_d = 0.15;
-        float inc_p = 0.01;
-        float inc_i = 0.0001;
-        float inc_d = 0.01;
+
         float error_p = 0.0;
         float error_i = 0.0;
         float error_d = 0.0;
