@@ -19,8 +19,9 @@ private:
 
 
     Rect rectSign = Rect(0,0,0,0);
-    int classifySVM(const Mat &grayImg, const Rect rect);
-    int detect(const Mat &binImg, const Mat &grayImg);
+    int classifyByDepth(const Mat &grayImg, const vector<Vec3f> circles);
+    int classifyByColor(const Mat &grayImg, const Rect rect);
+    int detect(const Mat &binImg, const Mat &grayImg, const vector<Vec3f> circles);
 
     ros::NodeHandle signNode;
 
@@ -29,9 +30,9 @@ private:
 public:
     DetectSign(const string  svmModel);
 
-    int update(const Mat &src);
+    int update(const Mat &src, const vector<Vec3f> circles);
     Rect draw();
-    void signClassify(const Mat &src);
+    void signClassify(const Mat &src, vector<Vec3f> circles);
 };
 
 

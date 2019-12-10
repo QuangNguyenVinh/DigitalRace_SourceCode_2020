@@ -34,6 +34,7 @@ using namespace cv::ml;
 
 #define PI 3.14f
 #define MIN_AREA 0.001f //For Sign Detect
+#define MAX_AREA 0.055f
 
 static string TEAM_NAME = "cdsntu1";
 static string SPEED_TOPIC = TEAM_NAME + "/set_speed";
@@ -51,7 +52,7 @@ static int BIRDVIEW_W = 240;
 static int BIRDVIEW_H = 320;
 static int sky = 90;
 
-typedef  std::chrono::time_point<std::chrono::high_resolution_clock> time_point_t;
+
 
 
 #endif

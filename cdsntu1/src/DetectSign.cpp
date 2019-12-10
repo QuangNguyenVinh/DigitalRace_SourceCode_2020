@@ -20,14 +20,39 @@ DetectSign::DetectSign(const string svmModel)
 
     signPub = signNode.advertise<std_msgs::Float32>(SIGN_TOPIC,1);
 }
-int DetectSign::classifySVM(const Mat &grayImg, const Rect rect)
+int DetectSign::classifyByDepth(const Mat &grayImg, const vector<Vec3f> circles)
+{
+    vector<Rect> rects(circles.size());
+    for(int i = 0; i < circles.size(); i++ )
+    {
+        Mat graySign;
+        Vec3i c = circles[i];
+        Point center = Point(c[0], c[1]);
+        int radius = c[2];
+        rects[i] = Rect(center.x - radius, center.y - radius, 2 * radius, 2 * radius);
+        //For limit rect size
+        rects[i].x = max(0, rects[i].x);
+        rects[i].y = max(0, rects[i].y);
+        rects[i].width = min(grayImg.size().width - rects[i].x, rects[i].width);
+        rects[i].height = min(grayImg.size().height - rects[i].y, rects[i].height);
+
+        resize(grayImg(rects[i]),graySign, Size(32,32));
+
+        //Compute HOG
+        vector<float> descriptors;
+        hog.compute(graySign, descriptors);
+
+        Mat fm(descriptors, CV_32F);
+        
+        int flag = static_cast<int>(svm->predict(fm.t()));
+        if(flag == 1 || flag == 2)
+            return flag;
+    }
+    return 0;
+}
+int DetectSign::classifyByColor(const Mat &grayImg, const Rect rect)
 {
     Mat graySign, grayClone = grayImg.clone();
-    GaussianBlur(grayClone, grayClone, Size(3,3), 2, 2);
-    vector<Vec3f> circles(0);
-    HoughCircles(grayClone, circles, CV_HOUGH_GRADIENT, 1, grayClone.rows/8, 20, 20, 0, 0);
-    if(circles.size() <= 0)
-        return 0;
     resize(grayImg(rect),graySign, Size(32,32));
 
     //Compute HOG
@@ -39,13 +64,15 @@ int DetectSign::classifySVM(const Mat &grayImg, const Rect rect)
     return static_cast<int>(svm->predict(fm.t()));
 
 }
-int DetectSign::detect(const Mat &binImg, const Mat &grayImg)
+int DetectSign::detect(const Mat &binImg, const Mat &grayImg, const vector<Vec3f> circles)
 {
     contours.clear();
-
+    Mat dilateBin = binImg.clone();
+    //Dilate image
+    dilate(dilateBin, dilateBin, Mat::zeros(Size(3,3), CV_8UC1));
     //Find contours;
     vector<Vec4i> hierarchy;
-    findContours(binImg, contours, hierarchy, CV_RETR_EXTERNAL,CV_CHAIN_APPROX_SIMPLE, Point(0,0));
+    findContours(dilateBin, contours, hierarchy, CV_RETR_EXTERNAL,CV_CHAIN_APPROX_SIMPLE, Point(0,0));
 
     int imgArea = binImg.size().width * binImg.size().height;
 
@@ -57,21 +84,26 @@ int DetectSign::detect(const Mat &binImg, const Mat &grayImg)
         double rectPerFrame = static_cast<double>(rect.area())/(imgArea);
         double ratio = static_cast<double>(rect.width)/(rect.height);
 
-        if(rectPerFrame > MIN_AREA)
+        if(rectPerFrame > MIN_AREA && rectPerFrame < MAX_AREA)
             if(ratio >= 0.6 && ratio <= 1.4)
                 {
-                    int flag = classifySVM(grayImg, rect);
+                    int flag = classifyByColor(grayImg, rect);
+                    int flag2 = classifyByDepth(grayImg, circles);
                     if(flag == 1 || flag == 2)
                     {
-                        rectSign = rect;
-                        return flag;
+                        if(flag2 == 1 || flag2 == 2)
+                        {
+                            rectSign = rect;
+                            return flag2;
+                        }
+
                     }
                 }
 
     }
     return 0;
 }
-int DetectSign::update(const Mat &src)
+int DetectSign::update(const Mat &src, const vector<Vec3f> circles)
 {
     
     Mat hsvImg, grayImg;
@@ -84,16 +116,16 @@ int DetectSign::update(const Mat &src)
     inRange(hsvImg, Scalar(minThresholdSign[0], minThresholdSign[1], minThresholdSign[2]) ,
             Scalar(maxThresholdSign[0], maxThresholdSign[1], maxThresholdSign[2] ),binImg);
     imshow("tb_sign", binImg);
-    return detect(binImg, grayImg);
+    return detect(binImg, grayImg, circles);
 
 }
 Rect DetectSign::draw()
 {
     return rectSign;
 }
-void DetectSign::signClassify(const Mat &src)
+void DetectSign::signClassify(const Mat &src, vector<Vec3f> circles)
 {
     std_msgs::Float32 sign;
-    sign.data = (float)(update(src));
+    sign.data = (float)(update(src, circles));
     signPub.publish(sign);
 }

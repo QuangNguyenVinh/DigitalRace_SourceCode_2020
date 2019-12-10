@@ -58,6 +58,33 @@ Rect DetectObstacle::findMaxRect(const vector<Rect> rect)
         }
     return rc;
 }
+vector<Vec3f> DetectObstacle::findRectSign(const Mat &depthImg)
+{
+    int _min = 10, _max = 318;
+    vector<Vec3f> circles(0);
+    Mat dst;
+    Mat gray = processDepth(depthImg);
+    absdiff(gray,mask, gray);
+    Mat temp = Mat::zeros(gray.size(), gray.type());
+    Point pts[4] = {
+            Point(160, 50),
+            Point(280, 50),
+            Point(280, 125),
+            Point(160, 125),
+    };
+    fillConvexPoly(temp, pts, 4, Scalar(255));
+    bitwise_and(gray, temp, dst);
+    GaussianBlur(dst,dst,Size(3,3), 2, 2);
+    imshow("debugSign", dst);
+
+    HoughCircles(dst, circles, HOUGH_GRADIENT, 1,
+                     gray.rows/6,  // change this value to detect circles with different distances to each other
+                      (double)_max, (double)_min,4, 10 // change the last two parameters
+                // (min_radius & max_radius) to detect larger circles
+        );
+
+    return circles;
+}
 Rect DetectObstacle::detect(const Mat &bin)
 {
     Mat dst = bin.clone();
@@ -84,13 +111,11 @@ Rect DetectObstacle::detect(const Mat &bin)
     }
     return obs;
 }
-Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg)
+Rect DetectObstacle::showObj(const Mat &depthImg)
 {
     Rect obs = null;
     obs_flag = false;
     Rect rect = Rect(0,0,0,0);
-
-    Mat rgb = rgbImg.clone();
     Mat grayImg = processDepth(depthImg).clone();
 
     Mat dst;
@@ -104,25 +129,16 @@ Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg)
     {
         int wRect = obs.width , hRect = obs.height;
 
-        //rectangle(rgb, Point(obs.x, obs.y), Point(wRect, hRect), Scalar(0,0,255), 3);
-
         rect = Rect(obs.x - buW, obs.y - buH, wRect + 2*buW, hRect + 2*buH);
 
-        if(rect.x < 0)
-            rect.x = 0;
-
-        if(rect.width + rect.x > rgb.size().width)
-            rect.width = rgb.size().width - rect.x - 1;
-
-        if(rect.y < 0)
-            rect.y = 0;
-
-        if(rect.height + rect.y > rgb.size().height)
-            rect.height = rgb.size().height - rect.y - 1;
+        rect.x = max(0, rect.x);
+        rect.y = max(0, rect.y);
+        rect.width = min(depthImg.size().width - rect.x, rect.width);
+        rect.height = min(depthImg.size().height - rect.y, rect.height);
 
         obs_flag = true;
     }
-    //imshow("obstacle", rgb);
+
     return rect;
 }
 void DetectObstacle::pubObstacle()

@@ -13,7 +13,8 @@ class DetectObstacle
         static Rect null;
         DetectObstacle(const string maskSrc);
         ~DetectObstacle();
-        Rect showObj(const Mat &depthImg, const Mat &rgbImg);
+        vector<Vec3f> findRectSign(const Mat &depthImg);
+        Rect showObj(const Mat &depthImg);
         void pubObstacle();
 
     private:
@@ -24,6 +25,7 @@ class DetectObstacle
         Mat thresh(const Mat &src);
         Mat roi(const Mat &src);
         Rect findMaxRect(const vector<Rect> rect);
+
         Rect detect(const Mat &bin);
 
         int value = 80;
