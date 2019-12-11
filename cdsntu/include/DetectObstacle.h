@@ -11,25 +11,32 @@ class DetectObstacle
 {
     public:
         static Rect null;
-        DetectObstacle();
+        DetectObstacle(const string maskSrc);
         ~DetectObstacle();
-        Rect showObj(const Mat &depthImg, const Mat &rgbImg);
+        vector<Vec3f> findRectSign(const Mat &depthImg);
+        Rect showObj(const Mat &depthImg, vector<vector<Point>> treeContours);
+        void pubObstacle();
 
     private:
+        Mat mask;
+        bool obs_flag = false;
         Mat processDepth(const Mat &depthImg);
-        Mat cvDepth(const Mat &depth);
-        Mat thresh(const Mat &src, int val = 100);
-        Mat roi(const Mat &src, int x, int y, int w, int h);
-        Mat threshDepthImg(const Mat &gray);
+        Mat revDepth(const Mat &depth);
+        Mat thresh(const Mat &src);
+        Mat roi(const Mat &src);
         Rect findMaxRect(const vector<Rect> rect);
-        Rect detect(const Mat &bin, int area, int cut = 40);
 
-        int low = 35;
-        int up = 110;
-        int cut = 50;
-        int lenCut = 80;
-        int area = 100;
-        int bu = 20;
+        Rect detect(const Mat &bin);
+
+        int value = 80;
+
+  
+        int buW = 30, buH = 20;
+        int minWidth = 30;
+        int minHeight = 20;
+
+        ros::NodeHandle obsNode;
+        ros::Publisher obsPub;
 
 
 };

@@ -10,11 +10,108 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d1b9a88f-e80d-474a-9b3a-fe64b8f9eaaf" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/ControlCar.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/ControlCar.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/DetectLane.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/DetectLane.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/DetectObstacle.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/DetectObstacle.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/DetectSign.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/DetectSign.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/header.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/header.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ControlCar.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ControlCar.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DetectLane.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/DetectLane.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DetectObstacle.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/DetectObstacle.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DetectSign.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/DetectSign.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/.idea/cdsntu.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/.idea/cdsntu.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/3.15.3/CMakeCCompiler.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/3.15.3/CMakeCCompiler.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/3.15.3/CMakeCXXCompiler.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/3.15.3/CMakeCXXCompiler.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/3.15.3/CMakeSystem.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/3.15.3/CMakeSystem.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdC/CMakeCCompilerId.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdCXX/CMakeCXXCompilerId.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdCXX/CMakeCXXCompilerId.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/clion-environment.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/cmake.check_cache" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/cmake-build-debug/CMakeFiles/cmake.check_cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/include/ControlCar.h" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/include/ControlCar.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/include/DetectLane.h" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/include/DetectLane.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/include/DetectObstacle.h" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/include/DetectObstacle.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/include/DetectSign.h" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/include/DetectSign.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/include/header.h" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/include/header.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/launch/cdsntu2.launch" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/launch/cdsntu2.launch" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/package.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/src/ControlCar.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/src/ControlCar.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/src/DetectLane.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/src/DetectLane.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/src/DetectObstacle.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/src/DetectObstacle.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/src/DetectSign.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/src/DetectSign.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../cdsntu2/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/.idea/cdsntu.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/CMakeLists.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/cmake-build-debug/CMakeCache.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/cmake-build-debug/CMakeFiles/3.15.3/CMakeCCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/cmake-build-debug/CMakeFiles/3.15.3/CMakeCXXCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/cmake-build-debug/CMakeFiles/3.15.3/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/cmake-build-debug/CMakeFiles/3.15.3/CMakeDetermineCompilerABI_CXX.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/cmake-build-debug/CMakeFiles/3.15.3/CMakeSystem.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdC/a.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdCXX/CMakeCXXCompilerId.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdCXX/a.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/cmake-build-debug/CMakeFiles/cmake.check_cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/include/ControlCar.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/include/DetectLane.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/include/DetectObstacle.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/include/DetectSign.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/include/header.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/launch/cdsntu2.launch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/model/svm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/package.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/src/ControlCar.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/src/DetectLane.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/src/DetectObstacle.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/src/DetectSign.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/src/main.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_bk1/src/mask.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/CMakeLists.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/cmake-build-debug/CMakeCache.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/cmake-build-debug/CMakeFiles/3.15.3/CMakeCCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/cmake-build-debug/CMakeFiles/3.15.3/CMakeCXXCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/cmake-build-debug/CMakeFiles/3.15.3/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/cmake-build-debug/CMakeFiles/3.15.3/CMakeDetermineCompilerABI_CXX.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/cmake-build-debug/CMakeFiles/3.15.3/CMakeSystem.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdC/a.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdCXX/CMakeCXXCompilerId.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/cmake-build-debug/CMakeFiles/3.15.3/CompilerIdCXX/a.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/cmake-build-debug/CMakeFiles/cmake.check_cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/include/ControlCar.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/include/DetectLane.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/include/DetectObstacle.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/include/DetectSign.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/include/header.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/launch/cdsntu2.launch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/model/svm.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/package.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/src.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/src/ControlCar.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/src/DetectLane.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/src/DetectObstacle.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/src/DetectSign.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cdsntu2_final/src/main.cpp" beforeDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -26,23 +123,34 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="$PROJECT_DIR$/.idea" />
+      </set>
+    </option>
+  </component>
   <component name="ProjectId" id="1S2vM92B0Q74K65c0CdSInxUekc" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../cdsntu1" />
+    <property name="last_opened_file_path" value="$USER_HOME$/CLionProjects/DiRa" />
     <property name="settings.editor.selected.configurable" value="configurable.group.build" />
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
+  <component name="ServiceViewManager">
+    <option name="viewStates">
       <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
       </list>
     </option>
   </component>
@@ -77,8 +185,29 @@
       <workItem from="1572957862936" duration="317000" />
       <workItem from="1573042789623" duration="20000" />
       <workItem from="1573390124951" duration="866000" />
-      <workItem from="1573394318242" duration="28000" />
-      <workItem from="1574318651697" duration="278000" />
+      <workItem from="1573394347654" duration="973000" />
+      <workItem from="1573450695131" duration="617000" />
+      <workItem from="1573471498709" duration="15000" />
+      <workItem from="1573626985708" duration="587000" />
+      <workItem from="1573979554592" duration="928000" />
+      <workItem from="1574318556553" duration="92000" />
+      <workItem from="1574318932044" duration="152000" />
+      <workItem from="1574319114279" duration="100000" />
+      <workItem from="1575102180208" duration="2321000" />
+      <workItem from="1575176561640" duration="956000" />
+      <workItem from="1575181893480" duration="2018000" />
+      <workItem from="1575184405461" duration="91000" />
+      <workItem from="1575185185864" duration="151000" />
+      <workItem from="1575198877480" duration="365000" />
+      <workItem from="1575216034525" duration="520000" />
+      <workItem from="1575216847049" duration="963000" />
+      <workItem from="1575348390771" duration="1165000" />
+      <workItem from="1575350638370" duration="122000" />
+      <workItem from="1575371146775" duration="1744000" />
+      <workItem from="1575377676635" duration="30000" />
+      <workItem from="1575453452758" duration="1183000" />
+      <workItem from="1575455094853" duration="1086000" />
+      <workItem from="1575705419112" duration="24000" />
     </task>
     <servers />
   </component>
@@ -97,5 +226,15 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="503" y="141" key="FileChooserDialogImpl" timestamp="1575705442871">
+      <screen x="65" y="24" width="1301" height="744" />
+    </state>
+    <state x="503" y="141" key="FileChooserDialogImpl/65.24.1301.744@65.24.1301.744" timestamp="1575705442871" />
+    <state x="376" y="211" key="com.intellij.ide.util.TipDialog" timestamp="1575705433519">
+      <screen x="65" y="24" width="1301" height="744" />
+    </state>
+    <state x="376" y="211" key="com.intellij.ide.util.TipDialog/65.24.1301.744@65.24.1301.744" timestamp="1575705433519" />
   </component>
 </project>

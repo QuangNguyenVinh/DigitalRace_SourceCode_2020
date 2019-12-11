@@ -10,8 +10,8 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
 )
 
-set(OpenCV_DIR "/usr/local/share/OpenCV/")
-find_package(  OpenCV 3.4.3 REQUIRED )
+set(OpenCV_STATIC OFF)
+find_package(  OpenCV REQUIRED )
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 catkin_package(
@@ -32,7 +32,8 @@ add_library(${PROJECT_NAME}
         src/DetectLane.cpp
         src/ControlCar.cpp
         src/DetectSign.cpp
-        src/DetectObstacle.cpp)
+        src/DetectObstacle.cpp
+        src/DetectTree.cpp)
 
 add_executable(${PROJECT_NAME}_node src/main.cpp)
 

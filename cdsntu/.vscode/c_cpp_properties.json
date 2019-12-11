@@ -1,0 +1,26 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "",
+                "limitSymbolsToIncludedHeaders": true
+            },
+            "includePath": [
+                "/opt/ros/kinetic/include/**",
+                "/home/quang/catkin_ws/src/cdsntu/include/**",
+                "/home/quang/catkin_ws/src/cdsntu2/include/**",
+                "/home/quang/catkin_ws/src/cdsntu3/include/**",
+                "/home/quang/catkin_ws/src/roadml/include/**",
+                "/home/quang/catkin_ws/src/team515/include/**",
+                "/home/quang/catkin_ws/src/testing/include/**",
+                "/usr/include/**"
+            ],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}
