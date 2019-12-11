@@ -75,35 +75,6 @@ Mat DetectLane::detectSnow(const Mat &src)
             Scalar(maxSnow[0], maxSnow[1], maxSnow[2]), snowImg);
     return snowImg;
 }
-Mat DetectLane::birdView(const Mat &srcImg)
-{
-    Point2f src[4], dst[4];
-    int width = srcImg.size().width;
-    int height = srcImg.size().height;
-
-    src[0] = Point(0, sky);
-    src[1] = Point(width, sky);
-    src[2] = Point(width, height);
-    src[3] = Point(0, height);
-
-    dst[0] = Point(0,0);
-    dst[1] = Point(BIRDVIEW_W, 0);
-    dst[2] = Point(BIRDVIEW_W - 105, BIRDVIEW_H);
-    dst[3] = Point(105, BIRDVIEW_H);
-
-    Mat M = getPerspectiveTransform(src, dst);
-
-    Mat dstImg(BIRDVIEW_H, BIRDVIEW_W, CV_8UC3);
-
-    warpPerspective(srcImg, dstImg, M, dstImg.size(), INTER_LINEAR, BORDER_CONSTANT);
-
-    return dstImg;
-}
-Mat DetectLane::showRes(const Mat &src) //For debug only
-{
-	Mat dst = detectLane(src).clone();
-	return birdView(dst);
-}
 Mat DetectLane::dilateLane(const Mat &src) //Gian anh
 {
     Mat dst;
