@@ -34,7 +34,7 @@ using namespace cv::ml;
 
 #define PI 3.14f
 #define MIN_AREA 0.001f //For Sign Detect
-#define MAX_AREA 0.055f
+#define MAX_AREA 0.05f
 
 static string TEAM_NAME = "cdsntu";
 static string SPEED_TOPIC = TEAM_NAME + "/set_speed";

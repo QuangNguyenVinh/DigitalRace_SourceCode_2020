@@ -70,8 +70,8 @@ vector<Vec3f> DetectObstacle::findRectSign(const Mat &depthImg)
     Point pts[4] = 
     {
             Point(160, 50),
-            Point(280, 50),
-            Point(280, 125),
+            Point(320, 50),
+            Point(320, 125),
             Point(160, 125),
     };
     fillConvexPoly(temp, pts, 4, Scalar(255));
@@ -81,7 +81,7 @@ vector<Vec3f> DetectObstacle::findRectSign(const Mat &depthImg)
 
     HoughCircles(dst, circles, HOUGH_GRADIENT, 1,
                      gray.rows/6,  // change this value to detect circles with different distances to each other
-                      (double)_max, (double)_min,4, 10 // change the last two parameters
+                      (double)_max, (double)_min, 5, 0 // change the last two parameters
                 // (min_radius & max_radius) to detect larger circles
         );
 

@@ -88,17 +88,12 @@ int DetectSign::detect(const Mat &binImg, const Mat &grayImg, const vector<Vec3f
         if(rectPerFrame > MIN_AREA && rectPerFrame < MAX_AREA)
             if(ratio >= 0.6 && ratio <= 1.4)
                 {
-                    cout << "Sign Area: " << rect.area() << endl;
                     int flag = classifyByColor(grayImg, rect);
-                    int flag2 = classifyByDepth(grayImg, circles);
+                    //int flag2 = classifyByDepth(grayImg, circles);
                     if(flag == 1 || flag == 2)
                     {
-                        if(flag2 == 1 || flag2 == 2)
-                        {
                             rectSign = rect;
-                            return flag2;
-                        }
-
+                            return flag;
                     }
                 }
 
