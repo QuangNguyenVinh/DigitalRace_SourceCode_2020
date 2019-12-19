@@ -33,8 +33,8 @@ int DetectSign::classifyByDepth(const Mat &grayImg, const vector<Vec3f> circles)
         //For limit rect size
         rects[i].x = max(0, rects[i].x);
         rects[i].y = max(0, rects[i].y);
-        rects[i].width = min(grayImg.size().width - 1 - rects[i].x, rects[i].width);
-        rects[i].height = min(grayImg.size().height - 1 - rects[i].y, rects[i].height);
+        rects[i].width = min(grayImg.size().width - rects[i].x, rects[i].width);
+        rects[i].height = min(grayImg.size().height - rects[i].y, rects[i].height);
 
         resize(grayImg(rects[i]),graySign, Size(32,32));
 
