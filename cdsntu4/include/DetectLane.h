@@ -11,7 +11,7 @@ class DetectLane
 		~DetectLane();
 
         Mat updateLane(const Mat &src, Rect obstacle);
-        Mat noCutFinal(const Mat &src);
+        Mat noCutFinal;
 	private:
         Mat cutROI(const Mat &src);
         Mat detectShadow(const Mat &src);

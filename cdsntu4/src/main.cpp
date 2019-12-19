@@ -27,6 +27,7 @@ vector<Vec3f> circles;
 int frame = 1;
 double start = 0;
 float FPS = 0;
+int _index = 0;
 /* End dirty code */
 
 void imageCallback(const sensor_msgs::ImageConstPtr& msg)
@@ -52,26 +53,32 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
         view = cv_ptr->image.clone();
         lane->updateLane(cv_ptr->image, rectObs).copyTo(out);
-        lane->noCutFinal(cv_ptr->image).copyTo(out1);
+        lane->noCutFinal.copyTo(out1);
         cv_ptr->image.copyTo(rgbImg);
         treeContours = tree->findTree(cv_ptr->image);
         if(circles.size() != 0)
 	        _turn = sign->UpdateFromCircle(cv_ptr->image, circles);
         
-        rectangle(view, rectObs, Scalar(0,0,255)); //Obstacles
         
         if(_turn == 1 || _turn == 2)
-        {   
+        {   _index++;
 	        decision = _turn;
             rectangle(view, sign->draw(), Scalar(255,0,0));
-            putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),CV_FONT_HERSHEY_COMPLEX_SMALL,              0.8,Scalar(255,0,0));
+            putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),
+                    CV_FONT_HERSHEY_COMPLEX_SMALL, 0.8,Scalar(255,0,0));
+            string rgbName = path + "/images/" + to_string(_index) + "_rgb.jpg";
+            imwrite(rgbName, view);
+            string depthName = path + "/images/" + to_string(_index) + "_depth.jpg";
+            imwrite(depthName, depthImg);
             flag2 = true;
         }
         else {
             flag2 = false;
         }
+        rectangle(view, rectObs, Scalar(0,0,255)); //Obstacles
         car->driveCar(out,out1, velocity,decision, flag2, rectObs, FPS);
-        //imshow("View", view);
+        if(show_val)
+            imshow("View", view);
     }
     catch (cv_bridge::Exception& e)
     {

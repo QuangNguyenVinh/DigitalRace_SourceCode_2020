@@ -53,6 +53,5 @@ class ControlCar
         double checkRigh(const Mat &src);
         double checkLeft(const Mat &src);
         double checkRoad(const Mat &src);
-        Point dangerPoint(const Mat &bin, int flag);
 };
 #endif

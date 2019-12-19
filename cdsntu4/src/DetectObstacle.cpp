@@ -111,9 +111,8 @@ Rect DetectObstacle::showObj(const Mat &depthImg, vector<vector<Point>> treeCont
     Mat grayImg = processDepth(depthImg);
     Mat dst;
     absdiff(grayImg, mask, dst);
-    Mat temp = roi(dst);
-    //imshow("Depth", temp);
-
+    if(show_val)
+        imshow("Depth", dst);
     Mat threshImg = thresh(dst);
     Mat roiImg = roi(threshImg);
     drawContours(roiImg, treeContours, 0, Scalar(0), -1);
@@ -124,18 +123,10 @@ Rect DetectObstacle::showObj(const Mat &depthImg, vector<vector<Point>> treeCont
 
         rect = Rect(obs.x - buW, obs.y - buH, wRect + 2*buW, hRect + 50);
 
-        if(rect.x < 0)
-            rect.x = 0;
-
-        if(rect.width + rect.x > depthImg.size().width)
-            rect.width = depthImg.size().width - rect.x;
-
-        if(rect.y < 0)
-            rect.y = 0;
-
-        if(rect.height + rect.y > depthImg.size().height)
-            rect.height = depthImg.size().height - rect.y;
+        rect.x = max(0, rect.x);
+        rect.y = max(0, rect.y);
+        rect.width = min(depthImg.size().width - rect.x, rect.width);
+        rect.height = min(depthImg.size().height - rect.y, rect.height);
     }
-    //imshow("obstacle", rgb);
     return rect;
 }

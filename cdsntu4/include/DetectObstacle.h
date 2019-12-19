@@ -5,8 +5,9 @@
 #ifndef DETECTOBSTACLE_H
 #define DETECTOBSTACLE_H
 
-#include<iostream>
-#include<string.h>
+#include "header.h"
+#include <iostream>
+#include <string.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>

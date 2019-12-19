@@ -37,4 +37,5 @@ static string IMAGE_RGB_TOPIC = TEAM_NAME + "/camera/rgb";
 static string IMAGE_DEPTH_TOPIC = TEAM_NAME + "/camera/depth";
 
 static float velocity = 80;
+static bool show_val = false;
 #endif

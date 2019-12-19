@@ -102,7 +102,7 @@ Mat DetectLane::removeNoise(const Mat &bin){
     dst &= bin;
     return dst;
 }
-Mat DetectLane::noCutFinal(const Mat &src){
+/*Mat DetectLane::noCutFinal(const Mat &src){
     
     Mat snow, lane, finalImg;
     //Processing snow image
@@ -126,7 +126,7 @@ Mat DetectLane::noCutFinal(const Mat &src){
     
     //imshow("finalnocut", finalImg);
     return finalImg;
-}
+}*/
 
 Mat DetectLane::updateLane(const Mat &src, Rect obstacle)
 {
@@ -149,6 +149,7 @@ Mat DetectLane::updateLane(const Mat &src, Rect obstacle)
     //finalImg = removeNoise(finalImg).clone();
     
     finalImg(rect) = Scalar(0);
+    noCutFinal = finalImg;
     //rectangle(finalImg, rect, Scalar(0,0,0), -1);
     finalImg = cutROI(finalImg).clone();
     //imshow("final", finalImg);
