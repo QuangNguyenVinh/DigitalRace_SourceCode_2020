@@ -150,7 +150,7 @@ Mat DetectLane::removeNoise(const Mat &bin)
 Mat DetectLane::noCutFinal(const Mat &src)
 {
     
-    Mat snow, lane, finalImg;
+    Mat snow, lane, finalImg, debug;
     //Processing snow image
     snow = detectSnow(src).clone();
     snow = erodeLane(snow).clone();
@@ -165,14 +165,16 @@ Mat DetectLane::noCutFinal(const Mat &src)
     lane = removeNoise(lane).clone();
     //Process final image
     finalImg = lane| snow;
+    debug = finalImg.clone();
     //finalImg = removeNoise(finalImg).clone();
     
     //finalImg(rect) = Scalar(0);
-    //rectangle(finalImg, Rect(10,90,80,15), Scalar(255,255,255), 1);
-    //rectangle(finalImg, Rect(210, 80, 100, 15), Scalar(255,255,255), 1);
-    //rectangle(finalImg, Rect(0,125,40,20), Scalar(255,255,255), 1);
-    //rectangle(finalImg, Rect(280, 130, 40, 20), Scalar(255,255,255), 1);
-    //imshow("finalnocut", finalImg);
+
+    rectangle(debug, Rect(10,90,80,15), Scalar(255,255,255), 1);
+    rectangle(debug, Rect(210, 80, 100, 15), Scalar(255,255,255), 1);
+    rectangle(debug, Rect(0,125,40,20), Scalar(255,255,255), 1);
+    rectangle(debug, Rect(280, 130, 40, 20), Scalar(255,255,255), 1);
+    imshow("debug", debug);
     return finalImg;
 }
 
