@@ -93,7 +93,7 @@ vector<Vec3f> DetectObstacle::RectSign(const Mat &depthImg){
     fillConvexPoly(temp, pts, 4, Scalar(255));
     bitwise_and(gray, temp, dst);
     GaussianBlur(dst,dst,Size(3,3), 2, 2);
-    imshow("debugSign", dst);
+    //imshow("debugSign", dst);
 
     HoughCircles(dst, circles, HOUGH_GRADIENT, 1,
                      gray.rows/6,  // change this value to detect circles with different distances to each other
@@ -117,7 +117,7 @@ Rect DetectObstacle::showObj(const Mat &depthImg, vector<vector<Point>> treeCont
     Mat threshImg = thresh(dst);
     Mat roiImg = roi(threshImg);
     drawContours(roiImg, treeContours, 0, Scalar(0), -1);
-    imshow("threshDepth", roiImg);
+    //imshow("threshDepth", roiImg);
     obs = detect(roiImg);
     if(obs != null){
         int wRect = obs.width , hRect = obs.height;

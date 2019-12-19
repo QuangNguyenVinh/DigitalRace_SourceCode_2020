@@ -71,7 +71,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
             flag2 = false;
         }
         car->driveCar(out,out1, velocity,decision, flag2, rectObs, FPS);
-        imshow("View", view);
+        //imshow("View", view);
     }
     catch (cv_bridge::Exception& e)
     {
@@ -99,9 +99,9 @@ void depthCallback(const sensor_msgs::ImageConstPtr& msg)
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, TEAM_NAME);
-    cv::namedWindow("steer");
-    cv::namedWindow("threshDepth");
-    cv::namedWindow("View");
+    //cv::namedWindow("steer");
+    //cv::namedWindow("threshDepth");
+    //cv::namedWindow("View");
 
     lane = new DetectLane();
     car = new ControlCar();

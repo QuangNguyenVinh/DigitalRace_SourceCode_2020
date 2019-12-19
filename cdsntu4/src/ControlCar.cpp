@@ -81,7 +81,7 @@ double ControlCar::checkLeft(const Mat &src){
 }
 double ControlCar::checkRoad(const Mat &src){
     Mat road = src(rectRoad);
-    imshow("road", road);
+    //imshow("road", road);
     return countNonZero(road);
 }
 
@@ -222,7 +222,7 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
     }
     if(isSign == true){
         velocity = 50;
-        cout << endl << "turn: " << turn << "\t";
+        //cout << endl << "turn: " << turn << "\t";
     }
     if(isSign == true && doTurn == false){
         int whitePoint;
@@ -234,7 +234,7 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
         if(whitePoint/area > 0.6){
             doTurn = true;
         }
-        cout << frame << "\tarea: " << round(whitePoint*100/area)/100;
+        //cout << frame << "\tarea: " << round(whitePoint*100/area)/100;
     }
     if(frame >= (int)FPS*2){
         frame = 0;
@@ -256,34 +256,41 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
             whitePointLeft = checkLeft(view1);
         //if(turn == 2)
             whitePointRight = checkRigh(view1);
-        //cout << index << "\tarea: "<< round(whitePoint*100/area)/100 << "\terrorAngle: " << errorAngle;
-        cout<<index <<"\t"<<round(whitePointLeft*100/area)/100<<"\t"<<round(whitePointRight*100/area)/100<<endl;
+        // cout << index << "\tarea: "<< round(whitePoint*100/area)/100 
+        //      << "\terrorAngle: " << errorAngle;
+        // cout<<index <<"\t"<<round(whitePointLeft*100/area)/100
+        //     <<"\t"<<round(whitePointRight*100/area)/100 
+        //     << "\terrorAngle: " << errorAngle<<endl;
         int temp = 0;
         if (FPS < 13)
-            temp = FPS*2.2;
+            temp = FPS*2;
         else if(FPS < 20)
             temp = FPS*1.5;
         else
             temp = FPS*1.2;
+
+        if(temp < 18)
+            temp = 18;
+
         if(whitePointLeft/area < 0.4 && whitePointRight/area < 0.4 && index > temp){
             index = 0;
             frame = 0;
             isSign = false;
             doTurn = false;
-            cout<<endl <<"Fps: "<<FPS << "\ttemp: " << temp <<endl;
-            cout<<"\n----------------------\n";
+            // cout<<endl <<"Fps: "<<FPS << "\ttemp: " << temp <<endl;
+            // cout<<"\n----------------------\n";
         }
     }
-    try{
-        line(noCut,center, Point(160,239), Scalar(0), 2);
-        rectangle(noCut, obj, Scalar(0), -1);
-        rectangle(noCut, rectLeft, Scalar(255),1);
-        rectangle(noCut, rectRight, Scalar(255),1);
-    }
-    catch (Exception e){
-        cout<<"\nDraw bug: "<<e.msg<<endl;
-    }
-    imshow("steer", noCut);
+    // try{
+    //     line(noCut,center, Point(160,239), Scalar(0), 2);
+    //     rectangle(noCut, obj, Scalar(0), -1);
+    //     rectangle(noCut, rectLeft, Scalar(255),1);
+    //     rectangle(noCut, rectRight, Scalar(255),1);
+    // }
+    // catch (Exception e){
+    //     cout<<"\nDraw bug: "<<e.msg<<endl;
+    // }
+    //imshow("steer", noCut);
     steer.data = errorAngle;
     speed.data = velocity;
    
