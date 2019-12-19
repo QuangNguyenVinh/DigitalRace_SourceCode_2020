@@ -55,7 +55,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         {
             flag3 = true;
             flag1.push_back(1);
-	        decision = _turn;
+	    decision = _turn;
             rectangle(view, sign->draw(), Scalar(255,0,0));
             putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),CV_FONT_HERSHEY_COMPLEX_SMALL,0.8,Scalar(0,0,255));
         }
@@ -78,7 +78,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         cv::imshow("View", view);
         /*end dirty code*/
         //cout << "Turn: " << _turn << " Flag: " << flag2 << " Decision: " << decision << endl ;
-        car->driveCar(out, decision, flag2, rect);
+        car->driveCar(out, decision, flag3, rect);
 	    //waitKey(1);
     }
     catch (cv_bridge::Exception& e)

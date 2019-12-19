@@ -61,7 +61,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
             cv::imshow("View", view);
         /*end dirty code*/
         //cout << "Turn: " << _turn << " Flag: " << flag2 << " Decision: " << decision << endl ;
-            car->driveCar(out, decision, flag2, rect);
+            car->driveCar(out, decision, flag3, rect);
 	        //waitKey(1);
     }
     catch (cv_bridge::Exception& e)

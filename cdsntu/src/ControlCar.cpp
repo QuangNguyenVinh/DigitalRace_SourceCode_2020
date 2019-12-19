@@ -199,13 +199,13 @@ void ControlCar::driveCar(const Mat &view, int flag, bool flag2, Rect rect)
 	   
             errorSpeed = 40;
             if(flag == 1)
-                errorAngle = -40;
+                errorAngle = -30;
             else if(flag == 2)
                 errorAngle = 30;
             pubSpeed(errorSpeed);
             pubSteer(errorAngle);
             
-            ros::Duration(2.0).sleep();
+            ros::Duration(1.0).sleep();
  	        current_flag = false;
         
     }
