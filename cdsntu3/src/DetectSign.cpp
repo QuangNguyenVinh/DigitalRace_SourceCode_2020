@@ -3,210 +3,70 @@
 //
 
 #include "DetectSign.h"
+
 DetectSign::DetectSign(const string svmModel)
 {
     hog = HOGDescriptor(Size(32,32), Size(16,16), Size(8,8), Size(8,8), 9);
     svm = SVM::load(svmModel);
 
-    cvCreateTrackbar("LowH", "Threshold Sign", &minThresholdSign[0], 179);
-    cvCreateTrackbar("HighH", "Threshold Sign", &maxThresholdSign[0], 179);
+    cvCreateTrackbar("LowH", "tb_sign", &minThresholdSign[0], 179);
+    cvCreateTrackbar("HighH", "tb_sign", &maxThresholdSign[0], 179);
 
-    cvCreateTrackbar("LowS", "Threshold Sign", &minThresholdSign[1], 255);
-    cvCreateTrackbar("HighS", "Threshold Sign", &maxThresholdSign[1], 255);
+    cvCreateTrackbar("LowS", "tb_sign", &minThresholdSign[1], 255);
+    cvCreateTrackbar("HighS", "tb_sign", &maxThresholdSign[1], 255);
 
-    cvCreateTrackbar("LowV", "Threshold Sign", &minThresholdSign[2], 255);
-    cvCreateTrackbar("HighV", "Threshold Sign", &maxThresholdSign[2], 255);
+    cvCreateTrackbar("LowV", "tb_sign", &minThresholdSign[2], 255);
+    cvCreateTrackbar("HighV", "tb_sign", &maxThresholdSign[2], 255);
 
     signPub = signNode.advertise<std_msgs::Float32>(SIGN_TOPIC,1);
 }
-
-
-int DetectSign::UpdateFromCircle(const Mat &src, vector<Vec3f> circles)
+int DetectSign::classifySVM(const Mat &grayImg, const Rect rect)
 {
-    
-    rects.clear();
-    rects.resize(circles.size());
-    for(int i = 0; i < circles.size(); i++ )
-    {
-        Vec3i c = circles[i];
-        Point center = Point(c[0], c[1]);
-        int radius = c[2];
-        rects[i] = Rect(center.x - radius, center.y - radius, 2 * radius, 2 * radius);
+    Mat graySign, grayClone = grayImg.clone();
+    GaussianBlur(grayClone, grayClone, Size(3,3), 2, 2);
+    vector<Vec3f> circles(0);
+    resize(grayImg(rect),graySign, Size(32,32));
 
-        //For limit rect size
-        rects[i].x = max(0, rects[i].x);
-        rects[i].y = max(0, rects[i].y);
-        rects[i].width = min(src.size().width - rects[i].x, rects[i].width);
-        rects[i].height = min(src.size().height - rects[i].y, rects[i].height);
-    }
-    Mat hsvImg, grayImg;
-    Mat dst = src.clone();
+    //Compute HOG
+    vector<float> descriptors;
+    hog.compute(graySign, descriptors);
 
-    cvtColor(dst, hsvImg, CV_BGR2HSV);
-    cvtColor(dst, grayImg, CV_BGR2GRAY);
+    Mat fm(descriptors, CV_32F);
 
-    Mat binImg;
-    inRange(hsvImg, Scalar(minThresholdSign[0], minThresholdSign[1], minThresholdSign[2]) ,
-            Scalar(maxThresholdSign[0], maxThresholdSign[1], maxThresholdSign[2] ),binImg);
-    //rectangle(binImg, Rect(0,0,320,60), Scalar(0,0,0), -1);
-    imshow("sign", binImg);
-    return useHOG_SVM(grayImg);
+    return static_cast<int>(svm->predict(fm.t()));
 
 }
-
-bool DetectSign::detect(const Mat &binImg)
+int DetectSign::detect(const Mat &binImg, const Mat &grayImg)
 {
     contours.clear();
-    detectedContours.clear();
-    rects.clear();
 
     //Find contours;
     vector<Vec4i> hierarchy;
     findContours(binImg, contours, hierarchy, CV_RETR_EXTERNAL,CV_CHAIN_APPROX_SIMPLE, Point(0,0));
-    //Re-arrange detected contours from largest to smallest
-    if(contours.size())
-    {
-        sort(contours.begin(), contours.end(),[](const vector<Point> &p1, const vector<Point> &p2)
-        {
-            Rect r1 = boundingRect(p1);
-            Rect r2 = boundingRect(p2);
 
-            return r1.area() > r2.area();
-        });
-    }
-    detectedContours.resize(contours.size());
-    //Fill vector by all false-value
-    fill(detectedContours.begin(), detectedContours.end(), false);
+    int imgArea = binImg.size().width * binImg.size().height;
 
-    rects.resize(contours.size());
-
-    bool detected = false;
 
     for(size_t i = 0; i < contours.size(); i++)
     {
         Rect rect = boundingRect(contours[i]);
+	
+        double rectPerFrame = static_cast<double>(rect.area())/(imgArea);
+        double ratio = static_cast<double>(rect.width)/(rect.height);
 
-        double ellipseArea = PI * (rect.width/2) * (rect.height/2);
-        double area = contourArea(contours[i]);
-        rects[i] = rect;
-
-        double boundWperH = static_cast<double>(rect.width)/rect.height;
-        double areaPerEllipse = static_cast<double>(area) / ellipseArea;
-        double rectPerFrame = static_cast<double>(rect.area())/(binImg.size().width * binImg.size().height);
-        //If detected contour is similar with ellipse or circle means it could be sign
         if(rectPerFrame > MIN_AREA)
-            if( 0.5 < boundWperH && boundWperH < 1.5)
-                if( 0.6 < areaPerEllipse && areaPerEllipse < 1.4)
+            if(ratio >= 0.6 && ratio <= 1.4)
                 {
-                    detectedContours[i] = true;
-                    
-                    detected = true;
+                    int flag = classifySVM(grayImg, rect);
+                    if(flag == 1 || flag == 2)
+                    {
+                        rectSign = rect;
+                        return flag;
+                    }
                 }
 
     }
-    return detected;
-}
-Rect DetectSign::getRect(const Mat &binImg)
-{
-    contours.clear();
-    detectedContours.clear();
-    rects.clear();
-    Rect rectsign = Rect(0,0,0,0);
-    //Find contours;
-    vector<Vec4i> hierarchy;
-    findContours(binImg, contours, hierarchy, CV_RETR_EXTERNAL,CV_CHAIN_APPROX_SIMPLE, Point(0,0));
-    //Re-arrange detected contours from largest to smallest
-    if(contours.size())
-    {
-        sort(contours.begin(), contours.end(),[](const vector<Point> &p1, const vector<Point> &p2)
-        {
-            Rect r1 = boundingRect(p1);
-            Rect r2 = boundingRect(p2);
-
-            return r1.area() > r2.area();
-        });
-    }
-    detectedContours.resize(contours.size());
-    //Fill vector by all false-value
-    fill(detectedContours.begin(), detectedContours.end(), false);
-
-    rects.resize(contours.size());
-
-    bool detected = false;
-
-    for(size_t i = 0; i < contours.size(); i++)
-    {
-        Rect rect = boundingRect(contours[i]);
-
-        double ellipseArea = PI * (rect.width/2) * (rect.height/2);
-        double area = contourArea(contours[i]);
-        rects[i] = rect;
-
-        double boundWperH = static_cast<double>(rect.width)/rect.height;
-        double areaPerEllipse = static_cast<double>(area) / ellipseArea;
-        double rectPerFrame = static_cast<double>(rect.area())/(binImg.size().width * binImg.size().height);
-        //If detected contour is similar with ellipse or circle means it could be sign
-        if(rectPerFrame > MIN_AREA)
-            if( 0.5 < boundWperH && boundWperH < 1.5)
-                if( 0.6 < areaPerEllipse && areaPerEllipse < 1.4)
-                {
-                    detectedContours[i] = true;
-                    rectsign = rects[i];
-                    
-                }
-
-    }
-    return rectsign;
-}
-int DetectSign::useHOG_SVM(const Mat &grayImg)
-{
-    int flag = 0;
-    for(size_t i = 0; i < rects.size(); i++)
-    {
-        Rect rect = rects[i];
-
-        Mat graySign;
-        /*if (rect.x < 0 || rect.y < 0 || rect.x - rect.width < 0 || rect.y - rect.height < 0 ||
-            rect.x + rect.width > 320 || rect.y + rect.height > 240)
-            continue;*/
-        resize(grayImg(rect),graySign, Size(32,32)); //Resize gray image to fit model
-        
-        //Compute HOG
-        vector<float> descriptors;
-        hog.compute(graySign, descriptors);
-
-        Mat fm(descriptors, CV_32F);
-
-        int classID = static_cast<int>(svm->predict(fm.t()));
-
-        if(classID == 1) //Turn left sign
-            flag = 1;
-
-        if(classID == 2) //Turn right sign
-            flag = 2;
-
-        if(flag != 0)
-        {
-            rectSign = rect;
-            return flag;
-        }
-    }
-    return flag;
-}
-Rect DetectSign::getCenterSign(const Mat &src)
-{
-    Mat hsvImg, grayImg;
-    Mat dst = src.clone();
-
-    cvtColor(dst, hsvImg, CV_BGR2HSV);
-    cvtColor(dst, grayImg, CV_BGR2GRAY);
-
-    Mat binImg;
-    inRange(hsvImg, Scalar(minThresholdSign[0], minThresholdSign[1], minThresholdSign[2]) ,
-            Scalar(maxThresholdSign[0], maxThresholdSign[1], maxThresholdSign[2] ),binImg);
-    //cutROI(binImg);
-    
-    return getRect(binImg);
+    return 0;
 }
 int DetectSign::update(const Mat &src)
 {
@@ -220,12 +80,9 @@ int DetectSign::update(const Mat &src)
     Mat binImg;
     inRange(hsvImg, Scalar(minThresholdSign[0], minThresholdSign[1], minThresholdSign[2]) ,
             Scalar(maxThresholdSign[0], maxThresholdSign[1], maxThresholdSign[2] ),binImg);
-    rectangle(binImg, Rect(0,0,320,60), Scalar(0,0,0), -1);
-    imshow("sign", binImg);
-    
-    if(detect(binImg))
-        return useHOG_SVM(grayImg);
-    else return 0;
+    //imshow("tb_sign", binImg);
+    return detect(binImg, grayImg);
+
 }
 Rect DetectSign::draw()
 {

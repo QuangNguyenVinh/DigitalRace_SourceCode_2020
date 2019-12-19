@@ -93,7 +93,7 @@ vector<Vec3f> DetectObstacle::RectSign(const Mat &depthImg){
     fillConvexPoly(temp, pts, 4, Scalar(255));
     bitwise_and(gray, temp, dst);
     GaussianBlur(dst,dst,Size(3,3), 2, 2);
-    imshow("debugSign", dst);
+    //imshow("debugSign", dst);
 
     HoughCircles(dst, circles, HOUGH_GRADIENT, 1,
                      gray.rows/6,  // change this value to detect circles with different distances to each other
@@ -104,7 +104,7 @@ vector<Vec3f> DetectObstacle::RectSign(const Mat &depthImg){
     return circles;
 }
 
-Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg)
+Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg, vector<vector<Point>> treeContours)
 {
     Rect obs = null;
     Rect rect = Rect(0,0,0,0);
@@ -113,11 +113,12 @@ Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg)
     Mat dst;
     absdiff(grayImg, mask, dst);
     Mat temp = roi(dst);
-    imshow("Depth", temp);
+    //imshow("Depth", temp);
 
     Mat threshImg = thresh(dst);
     Mat roiImg = roi(threshImg);
-    imshow("threshImg", roiImg);
+    drawContours(roiImg, treeContours, 0, Scalar(0), -1);
+    //imshow("threshImg", roiImg);
     obs = detect(roiImg);
     if(obs != null){
         int wRect = obs.width , hRect = obs.height;
@@ -125,11 +126,17 @@ Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg)
 
         rect = Rect(obs.x - buW, obs.y - buH, wRect + 2*buW, hRect + 50);
 
-        rect.x = max(0, rect.x);
-        rect.y = max(0, rect.y);
-        rect.width = min(rgb.size().width - rect.x, rect.width);
-        rect.height = min(rgb.size().height - rect.y, rect.height);
+        if(rect.x < 0)
+            rect.x = 0;
 
+        if(rect.width + rect.x > rgb.size().width)
+            rect.width = rgb.size().width - rect.x;
+
+        if(rect.y < 0)
+            rect.y = 0;
+
+        if(rect.height + rect.y > rgb.size().height)
+            rect.height = rgb.size().height - rect.y;
         rectangle(rgb, rect, Scalar(0,0,255), 1);
     }
     //imshow("obstacle", rgb);

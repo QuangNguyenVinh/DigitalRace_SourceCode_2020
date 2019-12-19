@@ -20,7 +20,7 @@ class DetectObstacle
         static Rect null;
         DetectObstacle(string maskSrc);
         ~DetectObstacle();
-        Rect showObj(const Mat &depthImg, const Mat &rgbImg);
+        Rect showObj(const Mat &depthImg, const Mat &rgbImg, vector<vector<Point>> treeContours);
         vector<Vec3f> RectSign(const Mat &depthImg);
 
     private:

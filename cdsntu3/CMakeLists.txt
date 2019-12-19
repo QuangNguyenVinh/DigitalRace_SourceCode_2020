@@ -32,7 +32,8 @@ add_library(${PROJECT_NAME}
         src/DetectLane.cpp
         src/ControlCar.cpp
         src/DetectSign.cpp
-        src/DetectObstacle.cpp)
+        src/DetectObstacle.cpp
+        src/DetectTree.cpp)
 
 add_executable(${PROJECT_NAME}_node src/main.cpp)
 

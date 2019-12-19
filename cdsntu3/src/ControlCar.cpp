@@ -17,7 +17,7 @@ int ControlCar::getArea(const Mat &bin)
 bool ControlCar::checkLeftTurn(const Mat &bin, Rect leftRect)
 {
     Mat left = bin(leftRect);
-    imshow("StopLeft", left);
+    //imshow("StopLeft", left);
     cout << "StopLeft: " << countNonZero(left) << endl;
     if(countNonZero(left) > 60 && countNonZero(left) < 300 )
         return true;
@@ -26,7 +26,7 @@ bool ControlCar::checkLeftTurn(const Mat &bin, Rect leftRect)
 bool ControlCar::checkRightTurn(const Mat &bin, Rect rightRect)
 {
     Mat right = bin(rightRect);
-    imshow("StopRight", right);
+    //imshow("StopRight", right);
     cout << "StopRight: " << countNonZero(right) << endl;
     if(countNonZero(right) > 60 && countNonZero(right) < 300)
         return true;
@@ -35,18 +35,18 @@ bool ControlCar::checkRightTurn(const Mat &bin, Rect rightRect)
 bool ControlCar::checkLeft(const Mat &bin, Rect leftRect)
 {
     Mat left = bin(leftRect);
-    imshow("Left-Turn", left);
+    //imshow("Left-Turn", left);
     cout << "Left-Turn: " << countNonZero(left) << endl;
-    if(countNonZero(left) >= 250 )
+    if(countNonZero(left) >= 100 )
         return true;
     return false;
 }
 bool ControlCar::checkRight(const Mat &bin, Rect rightRect)
 {
     Mat right = bin(rightRect);
-    imshow("Right-Turn", right);
+    //imshow("Right-Turn", right);
     cout << "Right-Turn: " << countNonZero(right) << endl;
-    if(countNonZero(right) >= 150 )
+    if(countNonZero(right) >= 100 )
         return true;
     return false;
     
@@ -150,15 +150,15 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1, int flag, bool flag
     Mat dst = view1.clone(), dst2 = view1.clone(), dst4 = view1.clone();
     int white = getArea(dst);
     
-    bool leftTurn = checkLeftTurn(dst, Rect(20,80,100,15));
-    bool rightTurn = checkRightTurn(dst, Rect(200, 80, 100, 15));
-    bool left = checkLeft(dst2, Rect(0,120,40,20));
-    int right = checkRight(dst4, Rect(280, 110, 40, 20));
+    bool leftTurn = checkLeftTurn(dst, Rect(10,90,80,15));
+    bool rightTurn = checkRightTurn(dst, Rect(210, 80, 100, 15));
+    bool left = checkLeft(dst2, Rect(0,125,40,20));
+    int right = checkRight(dst4, Rect(280, 130, 40, 20));
 
     Mat dst3 = view.clone();
     center = getPoint(view, obj);
     line(dst, center, Point((int)(IMG_W/2), (int)(IMG_H -1)), (0, 0, 0), 2);
-    imshow("steer", dst3);
+    //imshow("steer", dst3);
 
 
     //errorAngle = getSteer(center)*0.7 - preSteer*0.3;
@@ -187,23 +187,19 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1, int flag, bool flag
     {
         dem++;
     }
-    if (temp == true)
-    {
-        demtemp++;
-    }
     
     if (white > 7000)
     {
-        velocity = 80;
+        velocity = 60;
         errorAngle = errorAngle + 2;
     }else if (white > 6000 && white < 7000)
     {
-        velocity = 70;
+        velocity = 60;
         errorAngle = errorAngle + 2 ;
     }
     else
     {
-        velocity = 70;
+        velocity = 60;
         errorAngle = errorAngle + 2;
     }
     
@@ -263,11 +259,7 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1, int flag, bool flag
         temp = false;
         dem = 0;
     }
-    if (demtemp == 60)
-    {
-        temp = false;
-        demtemp = 0;
-    }
+    
     
     cout << "CheckLeft: " << left << "\tCheckRight: "<< right << endl;
     cout << "FlagLeftTurn: " << flagLeftTurn << "\tFlagRightTurn: " << flagRightTurn << endl;

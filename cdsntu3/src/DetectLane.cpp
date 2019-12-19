@@ -168,9 +168,11 @@ Mat DetectLane::noCutFinal(const Mat &src)
     //finalImg = removeNoise(finalImg).clone();
     
     //finalImg(rect) = Scalar(0);
-    //rectangle(finalImg, rect, Scalar(0,0,0), -1);
-    
-    imshow("finalnocut", finalImg);
+    //rectangle(finalImg, Rect(10,90,80,15), Scalar(255,255,255), 1);
+    //rectangle(finalImg, Rect(210, 80, 100, 15), Scalar(255,255,255), 1);
+    //rectangle(finalImg, Rect(0,125,40,20), Scalar(255,255,255), 1);
+    //rectangle(finalImg, Rect(280, 130, 40, 20), Scalar(255,255,255), 1);
+    //imshow("finalnocut", finalImg);
     return finalImg;
 }
 
@@ -197,6 +199,6 @@ Mat DetectLane::updateLane(const Mat &src, Rect obstacle)
     finalImg(rect) = Scalar(0);
     //rectangle(finalImg, rect, Scalar(0,0,0), -1);
     finalImg = cutROI(finalImg).clone();
-    imshow("final", finalImg);
+    //imshow("final", finalImg);
     return finalImg;
 }
