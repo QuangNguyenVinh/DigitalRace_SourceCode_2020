@@ -136,8 +136,8 @@ Rect DetectObstacle::showObj(const Mat &depthImg, vector<vector<Point>> treeCont
 
         rect.x = max(0, rect.x);
         rect.y = max(0, rect.y);
-        rect.width = min(depthImg.size().width - 1 - rect.x, rect.width);
-        rect.height = min(depthImg.size().height - 1 - rect.y, rect.height);
+        rect.width = min(depthImg.size().width - rect.x, rect.width);
+        rect.height = min(depthImg.size().height - rect.y, rect.height);
 
         obs_flag = true;
     }
