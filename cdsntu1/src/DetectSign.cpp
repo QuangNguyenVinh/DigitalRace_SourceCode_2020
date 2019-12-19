@@ -58,6 +58,8 @@ int DetectSign::classifyByColor(const Mat &grayImg, const Rect rect)
     //Change constrast
     float alpha = 2, beta = 50;
     graySign.convertTo(graySign, -1, alpha, beta);
+    //Remove noise
+    GaussianBlur(graySign, graySign, Size(3,3), 2, 2);
     //Compute HOG
     vector<float> descriptors;
     hog.compute(graySign, descriptors);
