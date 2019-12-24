@@ -97,7 +97,7 @@ vector<Vec3f> DetectObstacle::RectSign(const Mat &depthImg){
 
     HoughCircles(dst, circles, HOUGH_GRADIENT, 1,
                      gray.rows/6,  // change this value to detect circles with different distances to each other
-                      (double)_max, (double)_min,4, 15 // change the last two parameters
+                      (double)_max, (double)_min,2, 15 // change the last two parameters
                 // (min_radius & max_radius) to detect larger circles
         );
 
@@ -125,8 +125,8 @@ Rect DetectObstacle::showObj(const Mat &depthImg, vector<vector<Point>> treeCont
 
         rect.x = max(0, rect.x);
         rect.y = max(0, rect.y);
-        rect.width = min(depthImg.size().width - rect.x, rect.width);
-        rect.height = min(depthImg.size().height - rect.y, rect.height);
+        rect.width = min(depthImg.size().width - 1 - rect.x, rect.width);
+        rect.height = min(depthImg.size().height - 1 - rect.y, rect.height);
     }
     return rect;
 }

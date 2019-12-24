@@ -60,16 +60,20 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 	        _turn = sign->UpdateFromCircle(cv_ptr->image, circles);
         
         
-        if(_turn == 1 || _turn == 2)
-        {   _index++;
+        if(_turn == 1 || _turn == 2){   
 	        decision = _turn;
             rectangle(view, sign->draw(), Scalar(255,0,0));
             putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),
                     CV_FONT_HERSHEY_COMPLEX_SMALL, 0.8,Scalar(255,0,0));
-            string rgbName = path + "/images/" + to_string(_index) + "_rgb.jpg";
-            imwrite(rgbName, view);
-            string depthName = path + "/images/" + to_string(_index) + "_depth.jpg";
-            imwrite(depthName, depthImg);
+            if(!flag2){
+                _index++;
+                string rgbNameOrigin = path + "/images/" + to_string(_index) + "_rgb_origin.jpg";
+                imwrite(rgbNameOrigin, cv_ptr->image);
+                string rgbName = path + "/images/" + to_string(_index) + "_rgb.jpg";
+                imwrite(rgbName, view);
+                string depthName = path + "/images/" + to_string(_index) + "_depth.jpg";
+                imwrite(depthName, depthImg);
+            }
             flag2 = true;
         }
         else {

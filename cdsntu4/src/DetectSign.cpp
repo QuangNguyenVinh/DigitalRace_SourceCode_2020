@@ -18,8 +18,8 @@ int DetectSign::UpdateFromCircle(const Mat &src, vector<Vec3f> circles){
         Rect rect = Rect(center.x - radius, center.y - radius, 2 * radius, 2 * radius);
         rect.x = max(0, rect.x);
         rect.y = max(0, rect.y);
-        rect.width = min(src.size().width - rect.x, rect.width);
-        rect.height = min(src.size().height - rect.y, rect.height);
+        rect.width = min(src.size().width - 1 - rect.x, rect.width);
+        rect.height = min(src.size().height - 1 - rect.y, rect.height);
         rects[i] = rect;
     }
     Mat hsvImg, grayImg;
@@ -43,6 +43,11 @@ int DetectSign::useHOG_SVM(const Mat &grayImg)
             rect.x + rect.width > 320 || rect.y + rect.height > 240)
             continue;*/
         resize(grayImg(rect),graySign, Size(32,32)); //Resize gray image to fit model
+        //Change constrast
+        float alpha = 2, beta = 50;
+        graySign.convertTo(graySign, -1, alpha, beta);
+        //Remove noise
+        GaussianBlur(graySign, graySign, Size(3,3), 2, 2);
         
         //Compute HOG
         vector<float> descriptors;

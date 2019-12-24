@@ -95,6 +95,8 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
     double RA = checkRoad(view)/roadArea;
     if(RA >= 0.45)
         velocity = velocity;
+    else if (RA >= 0.4)
+        velocity = velocity - 5;
     else if (RA >= 0.35)
         velocity = velocity - 10;
     else if (RA >= 0.25)
