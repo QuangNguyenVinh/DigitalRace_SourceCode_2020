@@ -58,6 +58,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 		    flag1.clear();
 		    flag3 = false;
 	    }
+	if(show_val)
             cv::imshow("View", view);
         /*end dirty code*/
         //cout << "Turn: " << _turn << " Flag: " << flag2 << " Decision: " << decision << endl ;
@@ -92,12 +93,12 @@ void depthCallback(const sensor_msgs::ImageConstPtr& msg)
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, TEAM_NAME);
-    cv::namedWindow("steer");
-    cv::namedWindow("tb_sign");
+    //cv::namedWindow("steer");
+    //cv::namedWindow("tb_sign");
     //cv::namedWindow("tb_lane");
     //cv::namedWindow("Depth");
     //cv::namedWindow("RGB");
-    cv::namedWindow("tb_depth");
+    //cv::namedWindow("tb_depth");
     //cv::namedWindow("obstacle");
 
     lane = new DetectLane();
@@ -106,7 +107,7 @@ int main(int argc, char **argv)
     obstacle = new DetectObstacle(maskSrc);
     if (true) 
     {
-        cv::startWindowThread();
+        //cv::startWindowThread();
 
         ros::NodeHandle nh;
 
@@ -120,5 +121,5 @@ int main(int argc, char **argv)
 
         ros::spin();
     } 
-    cv::destroyAllWindows();
+    //cv::destroyAllWindows();
 }

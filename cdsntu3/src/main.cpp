@@ -99,7 +99,8 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         white = 0;
         white1 = 0;
         //video.write(view);
-        //imshow("View", view);
+        if(show_val)
+        	imshow("View", view);
         cout<<"---------------------\n";
 	    //waitKey(1);
     }
@@ -145,7 +146,7 @@ int main(int argc, char **argv)
     obstacle = new DetectObstacle(maskSrc);
     if (true) 
     {
-        cv::startWindowThread();
+        //cv::startWindowThread();
 
         ros::NodeHandle nh;
         image_transport::ImageTransport it(nh);
@@ -156,5 +157,5 @@ int main(int argc, char **argv)
 
         ros::spin();
     } 
-    cv::destroyAllWindows();
+    //cv::destroyAllWindows();
 }

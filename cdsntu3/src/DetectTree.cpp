@@ -65,6 +65,7 @@ vector<vector<Point>> DetectTree::findTree(const Mat &src){
         //drawContours( img, contours, index, Scalar(255,0,0), -1);
     }
     drawContours(tree, treeContours, 0, Scalar(255,0,0), -1);
-    //imshow("tree", tree);
+    if(show_val)
+    	imshow("tree", tree);
     return treeContours;
 }

@@ -214,7 +214,8 @@ void ControlCar::driveCar(const Mat &view, int flag, bool flag2, Rect rect)
     errorAngle = pid(center.x - IMG_W/2 + 1);
 
     line(dst2, center, Point((int)(IMG_W/2), (int)(IMG_H -1)), (0, 0, 0), 2);
-    imshow("steer", dst);
+    if(show_val)
+    	imshow("steer", dst);
 
 
     //errorAngle = pid(getSteer(center));

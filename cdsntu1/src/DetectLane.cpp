@@ -130,7 +130,8 @@ Mat DetectLane::updateLane(const Mat &src, Rect obstacle)
     snow(Rect(snow.cols - 50, 120, 50, snow.rows - 120)) = Scalar(0); 
     //Process lane image
     lane = detectLane(src).clone();
-    imshow("tb_lane", lane);
+    if(show_val)
+    	imshow("tb_lane", lane);
     lane = erodeLane(lane).clone();
     lane = dilateLane(lane).clone();
     lane = removeNoise(lane).clone();

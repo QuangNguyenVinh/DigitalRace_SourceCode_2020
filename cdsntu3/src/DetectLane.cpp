@@ -1,7 +1,7 @@
 #include "DetectLane.h"
 DetectLane::DetectLane()
 {
-	    cvCreateTrackbar("LowH", "tb_lane", &minThreshold[0], 179);
+	cvCreateTrackbar("LowH", "tb_lane", &minThreshold[0], 179);
         cvCreateTrackbar("HighH", "tb_lane", &maxThreshold[0], 179);
 
         cvCreateTrackbar("LowS", "tb_lane", &minThreshold[1], 255);
@@ -159,7 +159,8 @@ Mat DetectLane::noCutFinal(const Mat &src)
     snow(Rect(snow.cols - 50, 120, 50 , snow.rows - 120)) = Scalar(0); 
     //Process lane image
     lane = detectLane(src).clone();
-    //imshow("tb_lane", lane);
+    if(show_val)
+    	imshow("tb_lane", lane);
     lane = erodeLane(lane).clone();
     lane = dilateLane(lane).clone();
     lane = removeNoise(lane).clone();
@@ -174,7 +175,8 @@ Mat DetectLane::noCutFinal(const Mat &src)
     rectangle(debug, Rect(210, 80, 100, 15), Scalar(255,255,255), 1);
     rectangle(debug, Rect(0,125,40,20), Scalar(255,255,255), 1);
     rectangle(debug, Rect(280, 130, 40, 20), Scalar(255,255,255), 1);
-    imshow("debug", debug);
+    if(show_val)
+    	imshow("debug", debug);
     return finalImg;
 }
 
@@ -190,7 +192,8 @@ Mat DetectLane::updateLane(const Mat &src, Rect obstacle)
     snow(Rect(snow.cols - 50, 120, 50 , snow.rows - 120)) = Scalar(0); 
     //Process lane image
     lane = detectLane(src).clone();
-    //imshow("tb_lane", lane);
+    if(show_val)
+    	imshow("tb_lane", lane);
     lane = erodeLane(lane).clone();
     lane = dilateLane(lane).clone();
     lane = removeNoise(lane).clone();
@@ -201,6 +204,7 @@ Mat DetectLane::updateLane(const Mat &src, Rect obstacle)
     finalImg(rect) = Scalar(0);
     //rectangle(finalImg, rect, Scalar(0,0,0), -1);
     finalImg = cutROI(finalImg).clone();
-    //imshow("final", finalImg);
+    if(show_val)
+    	imshow("final", finalImg);
     return finalImg;
 }

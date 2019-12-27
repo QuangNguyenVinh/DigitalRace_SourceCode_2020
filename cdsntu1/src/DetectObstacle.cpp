@@ -75,7 +75,8 @@ vector<Vec3f> DetectObstacle::findRectSign(const Mat &depthImg)
     fillConvexPoly(temp, pts, 4, Scalar(255));
     bitwise_and(gray, temp, dst);
     GaussianBlur(dst,dst,Size(3,3), 2, 2);
-    imshow("debugSign", dst);
+    if(show_val)
+    	imshow("debugSign", dst);
 
     HoughCircles(dst, circles, HOUGH_GRADIENT, 1,
                      gray.rows/6,  // change this value to detect circles with different distances to each other
@@ -123,7 +124,8 @@ Rect DetectObstacle::showObj(const Mat &depthImg)
 
     Mat threshImg = thresh(dst);
     Mat roiImg = roi(threshImg);
-    imshow("tb_depth", roiImg);
+    if(show_val)
+    	imshow("tb_depth", roiImg);
     obs = detect(roiImg);
     if(obs != null)
     {

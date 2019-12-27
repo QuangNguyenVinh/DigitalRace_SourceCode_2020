@@ -117,7 +117,8 @@ int DetectSign::update(const Mat &src, const vector<Vec3f> circles)
     Mat binImg;
     inRange(hsvImg, Scalar(minThresholdSign[0], minThresholdSign[1], minThresholdSign[2]) ,
             Scalar(maxThresholdSign[0], maxThresholdSign[1], maxThresholdSign[2] ),binImg);
-    imshow("tb_sign", binImg);
+    if(show_val)
+    	imshow("tb_sign", binImg);
     return detect(binImg, grayImg, circles);
 
 }

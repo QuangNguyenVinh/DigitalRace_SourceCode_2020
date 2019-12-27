@@ -47,5 +47,6 @@ static int BIRDVIEW_W = 240;
 static int BIRDVIEW_H = 320;
 static int sky = 90;
 
+static bool show_val = true;
 
 #endif
