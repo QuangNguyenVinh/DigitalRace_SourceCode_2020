@@ -94,20 +94,20 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
 
     double RA = checkRoad(view)/roadArea;
     if(RA >= 0.45)
-        velocity = velocity;
+        velocity = velocity - 10;
     else if (RA >= 0.4)
-        velocity = velocity - 5;
+        velocity = velocity - 10;
     else if (RA >= 0.35)
         velocity = velocity - 10;
     else if (RA >= 0.25)
         velocity = velocity - 15;
     else
         velocity = velocity - 20;
-    if(!isSign){
+    if(false){
         cout << "area: " << RA << "\tvelocity: " << velocity << endl;
     }
 
-    if(flag2 == true){
+    if(flag2 == true && doTurn == false){
         FPS = fps;
         frame = 0;
         isSign = true;
@@ -153,7 +153,7 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
         if (FPS < 13)
             temp = FPS*2;
         else
-            temp = FPS*1.2;
+            temp = FPS;
 
         if(temp < 18)
             temp = 18;
