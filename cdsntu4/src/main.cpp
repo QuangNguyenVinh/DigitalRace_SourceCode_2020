@@ -121,7 +121,7 @@ int main(int argc, char **argv)
     obstacle = new DetectObstacle(maskSrc);
     if (true) 
     {
-        cv::startWindowThread();
+        //cv::startWindowThread();
 
         ros::NodeHandle nh;
         image_transport::ImageTransport it(nh);
@@ -132,5 +132,5 @@ int main(int argc, char **argv)
 
         ros::spin();
     } 
-    cv::destroyAllWindows();
+    //cv::destroyAllWindows();
 }
