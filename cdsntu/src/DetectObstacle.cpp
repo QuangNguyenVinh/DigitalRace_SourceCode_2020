@@ -2,7 +2,9 @@
 Rect DetectObstacle::null = Rect();
 DetectObstacle::DetectObstacle(const string maskSrc)
 {
+    if(show_val){
     cvCreateTrackbar("value", "tb_depth", &value,255);
+    }
     mask = imread(maskSrc, IMREAD_COLOR);
     cvtColor(mask, mask, COLOR_BGR2GRAY);
 

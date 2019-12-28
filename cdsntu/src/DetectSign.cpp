@@ -8,7 +8,7 @@ DetectSign::DetectSign(const string svmModel)
 {
     hog = HOGDescriptor(Size(32,32), Size(16,16), Size(8,8), Size(8,8), 9);
     svm = SVM::load(svmModel);
-
+    if(show_val){
     cvCreateTrackbar("LowH", "tb_sign", &minThresholdSign[0], 179);
     cvCreateTrackbar("HighH", "tb_sign", &maxThresholdSign[0], 179);
 
@@ -17,7 +17,7 @@ DetectSign::DetectSign(const string svmModel)
 
     cvCreateTrackbar("LowV", "tb_sign", &minThresholdSign[2], 255);
     cvCreateTrackbar("HighV", "tb_sign", &maxThresholdSign[2], 255);
-
+    }
     signPub = signNode.advertise<std_msgs::Float32>(SIGN_TOPIC,1);
 }
 int DetectSign::classifyByDepth(const Mat &grayImg, const vector<Vec3f> circles)

@@ -46,6 +46,6 @@ static string IMAGE_DEPTH_TOPIC = TEAM_NAME + "/camera/depth";
 static string SIGN_TOPIC = TEAM_NAME + "/sign";
 static string OBSTACLE_TOPIC = TEAM_NAME + "/obstacle";
 
-static bool show_val = true;
+static bool show_val = false;
 
 #endif

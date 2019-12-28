@@ -75,7 +75,8 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 		    flag1.clear();
 		    flag3 = false;
 	    }
-        cv::imshow("View", view);
+        if(show_val)
+        	cv::imshow("View", view);
         /*end dirty code*/
         //cout << "Turn: " << _turn << " Flag: " << flag2 << " Decision: " << decision << endl ;
         car->driveCar(out, decision, flag3, rect);
