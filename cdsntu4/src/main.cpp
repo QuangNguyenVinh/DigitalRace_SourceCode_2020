@@ -63,17 +63,17 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         if(_turn == 1 || _turn == 2){   
 	        decision = _turn;
             rectangle(view, sign->draw(), Scalar(255,0,0));
-            putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),
-                    CV_FONT_HERSHEY_COMPLEX_SMALL, 0.8,Scalar(255,0,0));
-            if(false){
-                _index++;
-                string rgbNameOrigin = path + "/images/" + to_string(_index) + "_rgb_origin.jpg";
-                imwrite(rgbNameOrigin, cv_ptr->image);
-                string rgbName = path + "/images/" + to_string(_index) + "_rgb.jpg";
-                imwrite(rgbName, view);
-                string depthName = path + "/images/" + to_string(_index) + "_depth.jpg";
-                imwrite(depthName, depthImg);
-            }
+            // putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),
+            //        CV_FONT_HERSHEY_COMPLEX_SMALL, 0.8,Scalar(255,0,0));
+            // if(false){
+            //     _index++;
+            //     string rgbNameOrigin = path + "/images/" + to_string(_index) + "_rgb_origin.jpg";
+            //     imwrite(rgbNameOrigin, cv_ptr->image);
+            //     string rgbName = path + "/images/" + to_string(_index) + "_rgb.jpg";
+            //     imwrite(rgbName, view);
+            //     string depthName = path + "/images/" + to_string(_index) + "_depth.jpg";
+            //     imwrite(depthName, depthImg);
+            // }
             flag2 = true;
         }
         else {
@@ -121,8 +121,7 @@ int main(int argc, char **argv)
     obstacle = new DetectObstacle(maskSrc);
     if (true) 
     {
-        cout<<"\n\n\nREADY\n\n\n";
-        cv::startWindowThread();
+        // cv::startWindowThread();
 
         ros::NodeHandle nh;
         image_transport::ImageTransport it(nh);
@@ -131,7 +130,8 @@ int main(int argc, char **argv)
         image_transport::ImageTransport dt(nh);
         image_transport::Subscriber subd = dt.subscribe(IMAGE_DEPTH_TOPIC, 1, depthCallback);
 
+        cout<<"\n\n\nREADY\n\n\n";
         ros::spin();
     } 
-    cv::destroyAllWindows();
+    //cv::destroyAllWindows();
 }
