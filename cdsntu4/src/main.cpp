@@ -65,7 +65,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
             rectangle(view, sign->draw(), Scalar(255,0,0));
             putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),
                     CV_FONT_HERSHEY_COMPLEX_SMALL, 0.8,Scalar(255,0,0));
-            if(!flag2){
+            if(false){
                 _index++;
                 string rgbNameOrigin = path + "/images/" + to_string(_index) + "_rgb_origin.jpg";
                 imwrite(rgbNameOrigin, cv_ptr->image);
@@ -121,7 +121,8 @@ int main(int argc, char **argv)
     obstacle = new DetectObstacle(maskSrc);
     if (true) 
     {
-        //cv::startWindowThread();
+        cout<<"\n\n\nREADY\n\n\n";
+        cv::startWindowThread();
 
         ros::NodeHandle nh;
         image_transport::ImageTransport it(nh);
@@ -132,5 +133,5 @@ int main(int argc, char **argv)
 
         ros::spin();
     } 
-    //cv::destroyAllWindows();
+    cv::destroyAllWindows();
 }
