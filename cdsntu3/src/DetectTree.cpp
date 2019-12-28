@@ -1,6 +1,7 @@
 #include "DetectTree.h"
 
-Mat DetectTree::processImg(const Mat &src){
+Mat DetectTree::processImg(const Mat &src)
+{
     Mat hsv, tree;
     cvtColor(src, hsv, COLOR_BGR2HSV);
     inRange(hsv, Scalar(min[0], min[1], min[2]), Scalar(max[0], max[1], max[2]), tree);
@@ -66,6 +67,9 @@ vector<vector<Point>> DetectTree::findTree(const Mat &src){
     }
     drawContours(tree, treeContours, 0, Scalar(255,0,0), -1);
     if(show_val)
+    {
     	imshow("tree", tree);
+    }
+
     return treeContours;
 }

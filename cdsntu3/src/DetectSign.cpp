@@ -8,15 +8,18 @@ DetectSign::DetectSign(const string svmModel)
 {
     hog = HOGDescriptor(Size(32,32), Size(16,16), Size(8,8), Size(8,8), 9);
     svm = SVM::load(svmModel);
+    if(show_val)
+    {
+        cvCreateTrackbar("LowH", "tb_sign", &minThresholdSign[0], 179);
+        cvCreateTrackbar("HighH", "tb_sign", &maxThresholdSign[0], 179);
 
-    cvCreateTrackbar("LowH", "tb_sign", &minThresholdSign[0], 179);
-    cvCreateTrackbar("HighH", "tb_sign", &maxThresholdSign[0], 179);
+        cvCreateTrackbar("LowS", "tb_sign", &minThresholdSign[1], 255);
+        cvCreateTrackbar("HighS", "tb_sign", &maxThresholdSign[1], 255);
 
-    cvCreateTrackbar("LowS", "tb_sign", &minThresholdSign[1], 255);
-    cvCreateTrackbar("HighS", "tb_sign", &maxThresholdSign[1], 255);
+        cvCreateTrackbar("LowV", "tb_sign", &minThresholdSign[2], 255);
+        cvCreateTrackbar("HighV", "tb_sign", &maxThresholdSign[2], 255);
+    }
 
-    cvCreateTrackbar("LowV", "tb_sign", &minThresholdSign[2], 255);
-    cvCreateTrackbar("HighV", "tb_sign", &maxThresholdSign[2], 255);
 
     signPub = signNode.advertise<std_msgs::Float32>(SIGN_TOPIC,1);
 }
@@ -81,7 +84,10 @@ int DetectSign::update(const Mat &src)
     inRange(hsvImg, Scalar(minThresholdSign[0], minThresholdSign[1], minThresholdSign[2]) ,
             Scalar(maxThresholdSign[0], maxThresholdSign[1], maxThresholdSign[2] ),binImg);
     if(show_val)
+    {
     	imshow("tb_sign", binImg);
+    }
+
     return detect(binImg, grayImg);
 
 }

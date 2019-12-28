@@ -2,7 +2,11 @@
 Rect DetectObstacle::null = Rect();
 DetectObstacle::DetectObstacle(string maskSrc)
 {
-    cvCreateTrackbar("value", "threshImg", &value,255);
+    if(show_val)
+    {
+        cvCreateTrackbar("value", "threshImg", &value,255);
+    }
+
     mask = imread(maskSrc, IMREAD_COLOR);
     cvtColor(mask, mask, COLOR_BGR2GRAY);
 }
@@ -94,7 +98,10 @@ vector<Vec3f> DetectObstacle::RectSign(const Mat &depthImg){
     bitwise_and(gray, temp, dst);
     GaussianBlur(dst,dst,Size(3,3), 2, 2);
     if(show_val)
+    {
     	imshow("debugSign", dst);
+    }
+
 
     HoughCircles(dst, circles, HOUGH_GRADIENT, 1,
                      gray.rows/6,  // change this value to detect circles with different distances to each other
@@ -115,13 +122,19 @@ Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg, vector<vect
     absdiff(grayImg, mask, dst);
     Mat temp = roi(dst);
     if(show_val)
+    {
     	imshow("Depth", temp);
+    }
+
 
     Mat threshImg = thresh(dst);
     Mat roiImg = roi(threshImg);
     drawContours(roiImg, treeContours, 0, Scalar(0), -1);
     if(show_val)
+    {
     	imshow("threshImg", roiImg);
+    }
+
     obs = detect(roiImg);
     if(obs != null){
         int wRect = obs.width , hRect = obs.height;
@@ -142,6 +155,5 @@ Rect DetectObstacle::showObj(const Mat &depthImg, const Mat &rgbImg, vector<vect
             rect.height = rgb.size().height - rect.y;
         rectangle(rgb, rect, Scalar(0,0,255), 1);
     }
-    //imshow("obstacle", rgb);
     return rect;
 }

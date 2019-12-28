@@ -100,7 +100,10 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         white1 = 0;
         //video.write(view);
         if(show_val)
+        {
         	imshow("View", view);
+        }
+
         cout<<"---------------------\n";
 	    //waitKey(1);
     }

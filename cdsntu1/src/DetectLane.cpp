@@ -1,7 +1,9 @@
 #include "DetectLane.h"
 DetectLane::DetectLane()
 {
-	cvCreateTrackbar("LowH", "tb_lane", &minThreshold[0], 179);
+    if(show_val)
+    {
+        cvCreateTrackbar("LowH", "tb_lane", &minThreshold[0], 179);
         cvCreateTrackbar("HighH", "tb_lane", &maxThreshold[0], 179);
 
         cvCreateTrackbar("LowS", "tb_lane", &minThreshold[1], 255);
@@ -9,6 +11,8 @@ DetectLane::DetectLane()
 
         cvCreateTrackbar("LowV", "tb_lane", &minThreshold[2], 255);
         cvCreateTrackbar("HighV", "tb_lane", &maxThreshold[2], 255);
+    }
+
 }
 DetectLane::~DetectLane()
 {
