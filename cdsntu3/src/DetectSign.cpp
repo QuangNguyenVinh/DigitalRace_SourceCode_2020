@@ -26,9 +26,19 @@ DetectSign::DetectSign(const string svmModel)
 int DetectSign::classifySVM(const Mat &grayImg, const Rect rect)
 {
     Mat graySign, grayClone = grayImg.clone();
-    GaussianBlur(grayClone, grayClone, Size(3,3), 2, 2);
+    //GaussianBlur(grayClone, grayClone, Size(3,3), 2, 2);
     vector<Vec3f> circles(0);
     resize(grayImg(rect),graySign, Size(32,32));
+	
+    //Change constrast
+    float alpha = 2, beta = 50;
+    graySign.convertTo(graySign, -1, alpha, beta);
+    //Remove noise
+    GaussianBlur(graySign, graySign, Size(3,3), 2, 2);
+    if(show_val)
+    {
+    	imshow("Error", graySign);   
+    }
 
     //Compute HOG
     vector<float> descriptors;
