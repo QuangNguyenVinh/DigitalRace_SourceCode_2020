@@ -59,7 +59,11 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
             rectangle(view, sign->draw(), Scalar(255,0,0));
             putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),CV_FONT_HERSHEY_COMPLEX_SMALL,0.8,Scalar(0,0,255));
         }
-        else flag1.push_back(0);
+        else 
+	{
+		flag1.push_back(0);
+		flag3 = false;
+	}
         flag2 = false;
         if(flag1.size() > 2)
         {
@@ -73,7 +77,6 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         if(flag2 == true)
 	    {
 		    flag1.clear();
-		    flag3 = false;
 	    }
         if(show_val)
         	cv::imshow("View", view);
