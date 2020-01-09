@@ -19,9 +19,9 @@ class ControlCar
         ros::Publisher steerPub;
         ros::Publisher speedPub;
         
-        float k_p = 0.7;
+        float k_p = 0.9;
         float k_i = 0.01;
-        float k_d = 0.15;
+        float k_d = 0.2;
         float inc_p = 0.01;
         float inc_i = 0.0001;
         float inc_d = 0.01;
@@ -31,6 +31,8 @@ class ControlCar
 
         Rect rectRight = Rect(250, 120, 45, 20);
         Rect rectLeft = Rect(25, 120, 45, 20);
+        Rect rectStopRight = Rect(265, 140, 45, 20);
+        Rect rectStopLeft = Rect(10, 140, 45, 20);
         Rect rectRoad = Rect(0, 110, 320, 30);
 
         double roadArea = rectRoad.area();
@@ -50,8 +52,7 @@ class ControlCar
        
         float pid(const float &cte);
 
-        double checkRigh(const Mat &src);
-        double checkLeft(const Mat &src);
+        double turnProcess(const Mat &src, Rect rect);
         double checkRoad(const Mat &src);
 };
 #endif
