@@ -37,7 +37,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 
     cv_bridge::CvImagePtr cv_ptr;
     Mat out, out1, view;
-    int _turn = 0 ;
+    int _turn = 0, _turn2 = 0 ;
     try
     {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
@@ -49,6 +49,11 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         sign->signClassify(cv_ptr->image);
 	    /*Dirty code */
         cout<<"circles size: " << circles.size() << endl;
+        //Depth sign
+        Mat graySign;
+        cvtColor(cv_ptr->image, graySign, CV_BGR2GRAY);
+        _turn2 = sign->classifyByDepth(graySign, circles);
+        cout << "Depth sign: " << _turn2 << endl;
         //if(circles.size() > 0)
 	    _turn = sign->update(cv_ptr->image);
         

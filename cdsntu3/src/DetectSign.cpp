@@ -49,6 +49,42 @@ int DetectSign::classifySVM(const Mat &grayImg, const Rect rect)
     return static_cast<int>(svm->predict(fm.t()));
 
 }
+int DetectSign::classifyByDepth(const Mat &grayImg, const vector<Vec3f> circles)
+{
+    vector<Rect> rects(circles.size());
+    for(int i = 0; i < circles.size(); i++ )
+    {
+        Mat graySign;
+        Vec3i c = circles[i];
+        Point center = Point(c[0], c[1]);
+        int radius = c[2];
+        rects[i] = Rect(center.x - radius, center.y - radius, 2 * radius, 2 * radius);
+        //For limit rect size
+        rects[i].x = max(0, rects[i].x);
+        rects[i].y = max(0, rects[i].y);
+        rects[i].width = min(grayImg.size().width - rects[i].x, rects[i].width);
+        rects[i].height = min(grayImg.size().height - rects[i].y, rects[i].height);
+
+        resize(grayImg(rects[i]),graySign, Size(32,32));
+
+        //Change constrast
+        float alpha = 2, beta = 50;
+        graySign.convertTo(graySign, -1, alpha, beta);
+        //Remove noise
+        GaussianBlur(graySign, graySign, Size(3,3), 2, 2);
+
+        //Compute HOG
+        vector<float> descriptors;
+        hog.compute(graySign, descriptors);
+
+        Mat fm(descriptors, CV_32F);
+        
+        int flag = static_cast<int>(svm->predict(fm.t()));
+        if(flag == 1 || flag == 2)
+            return flag;
+    }
+    return 0;
+}
 int DetectSign::detect(const Mat &binImg, const Mat &grayImg)
 {
     contours.clear();
