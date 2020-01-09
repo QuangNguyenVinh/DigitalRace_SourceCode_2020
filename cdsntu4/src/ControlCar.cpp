@@ -178,7 +178,8 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
         rectangle(noCut, obj, Scalar(0), -1);
         rectangle(noCut, rectLeft, Scalar(255),1);
         rectangle(noCut, rectRight, Scalar(255),1);
-        imshow("steer", noCut);
+        if(show_val)
+        	imshow("steer", noCut);
     }
     steer.data = errorAngle;
     speed.data = velocity;
