@@ -48,7 +48,11 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
             rectangle(view, sign->draw(), Scalar(255,0,0));
             putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),CV_FONT_HERSHEY_COMPLEX_SMALL,0.8,Scalar(255,0,0));
         }
-        else flag1.push_back(0);
+        else 
+	{
+		flag1.push_back(0);
+		flag3 = false;
+	}
         flag2 = false;
         if(flag1.size() > 2)
             if(flag1[flag1.size()-1] == 0 && flag1[flag1.size()-2] == 1) flag2 = true;
@@ -56,7 +60,6 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         if(flag2 == true)
 	    {
 		    flag1.clear();
-		    flag3 = false;
 	    }
 	if(show_val)
     {

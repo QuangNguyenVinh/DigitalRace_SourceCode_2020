@@ -205,9 +205,7 @@ void ControlCar::driveCar(const Mat &view, int flag, bool flag2, Rect rect)
             pubSpeed(errorSpeed);
             pubSteer(errorAngle);
             current_flag = false;
-            ros::Duration(1.2).sleep();
- 	        
-        
+            ros::Duration(1.2).sleep();    
     }
     
     center = getPoint2(dst2, rect);

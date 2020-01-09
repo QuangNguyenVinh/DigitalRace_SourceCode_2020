@@ -60,8 +60,13 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         }
         else 
 	{
+<<<<<<< HEAD
 		//flag1.push_back(0);
 		flag3 = false;	
+=======
+		flag1.push_back(0);
+		flag3 = false;
+>>>>>>> 2cb67b239f0cde7c3691f0357aef81c79403582d
 	}
         flag2 = false;
         /*if(flag1.size() > 2)
@@ -76,7 +81,11 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         if(flag2 == true)
 	    {
 		    flag1.clear();
+<<<<<<< HEAD
 	    }*/
+=======
+	    }
+>>>>>>> 2cb67b239f0cde7c3691f0357aef81c79403582d
         if(show_val)
         	cv::imshow("View", view);
         /*end dirty code*/
