@@ -1,26 +1,17 @@
 #include "DetectLane.h"
 DetectLane::DetectLane(){
-<<<<<<< HEAD
-    // if(true){
-	//     cvCreateTrackbar("LowH", "tb_lane", &minThreshold[0], 179);
-    //     cvCreateTrackbar("HighH", "tb_lane", &maxThreshold[0], 179);
 
-    //     cvCreateTrackbar("LowS", "tb_lane", &minThreshold[1], 255);
-    //     cvCreateTrackbar("HighS", "tb_lane", &maxThreshold[1], 255);
+	if(show_val){
+	cvCreateTrackbar("LowH", "tb_lane", &minThreshold[0], 179);
+        cvCreateTrackbar("HighH", "tb_lane", &maxThreshold[0], 179);
 
-    //     cvCreateTrackbar("LowV", "tb_lane", &minThreshold[2], 255);
-    //     cvCreateTrackbar("HighV", "tb_lane", &maxThreshold[2], 255);
-    // }
-=======
-	    // cvCreateTrackbar("LowH", "tb_lane", &minThreshold[0], 179);
-        // cvCreateTrackbar("HighH", "tb_lane", &maxThreshold[0], 179);
+        cvCreateTrackbar("LowS", "tb_lane", &minThreshold[1], 255);
+        cvCreateTrackbar("HighS", "tb_lane", &maxThreshold[1], 255);
 
-        // cvCreateTrackbar("LowS", "tb_lane", &minThreshold[1], 255);
-        // cvCreateTrackbar("HighS", "tb_lane", &maxThreshold[1], 255);
+        cvCreateTrackbar("LowV", "tb_lane", &minThreshold[2], 255);
+        cvCreateTrackbar("HighV", "tb_lane", &maxThreshold[2], 255);
+	}
 
-        // cvCreateTrackbar("LowV", "tb_lane", &minThreshold[2], 255);
-        // cvCreateTrackbar("HighV", "tb_lane", &maxThreshold[2], 255);
->>>>>>> 2cb67b239f0cde7c3691f0357aef81c79403582d
 }
 DetectLane::~DetectLane(){
 
