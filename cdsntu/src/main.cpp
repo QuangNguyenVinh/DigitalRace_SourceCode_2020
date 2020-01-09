@@ -48,20 +48,23 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         Mat graySign;
         cvtColor(cv_ptr->image, graySign, CV_BGR2GRAY);
         _turn2 = sign->classifyByDepth(graySign, circles);
-        cout << "Depth sign: " << _turn2 << endl;
-        rectangle(view, rect, Scalar(255,0,0)); //Obstacles
-
+        cout << "Depth sign: " << _turn2 << " RGB sign: " << _turn << endl;
+        //rectangle(view, rect, Scalar(255,0,0)); //Obstacles
         if(_turn == 1 || _turn == 2)
         {
             flag3 = true;
-            flag1.push_back(1);
+            //flag1.push_back(1);
 	    decision = _turn;
             rectangle(view, sign->draw(), Scalar(255,0,0));
             putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),CV_FONT_HERSHEY_COMPLEX_SMALL,0.8,Scalar(0,0,255));
         }
-        else flag1.push_back(0);
+        else 
+	{
+		//flag1.push_back(0);
+		flag3 = false;	
+	}
         flag2 = false;
-        if(flag1.size() > 2)
+        /*if(flag1.size() > 2)
         {
             if(flag1[flag1.size()-1] == 0 && flag1[flag1.size()-2] == 1) 
             {
@@ -73,8 +76,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         if(flag2 == true)
 	    {
 		    flag1.clear();
-		    flag3 = false;
-	    }
+	    }*/
         if(show_val)
         	cv::imshow("View", view);
         /*end dirty code*/
@@ -110,14 +112,12 @@ void depthCallback(const sensor_msgs::ImageConstPtr& msg)
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, TEAM_NAME);
-    //cv::namedWindow("steer");
-    //cv::namedWindow("tb_sign");
-    //cv::namedWindow("tb_lane");
-    //cv::namedWindow("Depth");
-    //cv::namedWindow("RGB");
-    //cv::namedWindow("tb_depth");
-    //cv::namedWindow("obstacle");
-
+    if(show_val){
+    cv::namedWindow("steer");
+    cv::namedWindow("tb_sign");
+    cv::namedWindow("tb_lane");
+    cv::namedWindow("tb_depth");
+    }
     lane = new DetectLane();
     car = new ControlCar();
     sign = new DetectSign(svmModel);

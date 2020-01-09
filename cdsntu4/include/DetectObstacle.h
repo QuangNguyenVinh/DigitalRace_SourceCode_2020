@@ -33,7 +33,7 @@ class DetectObstacle
         
 
         Mat mask;
-        int value = 80;
+        int value = 75;
         int width = 30;
         int height = 10;
         int buW = 20, buH = 20;

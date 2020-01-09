@@ -59,6 +59,10 @@ Point ControlCar::getPoint(const Mat &src, Rect rect){
 
 float ControlCar::pid(const float &cte){
     error_i += cte;
+    if(error_i > 500)
+        error_i = 500;
+    if(error_i < -500)
+        error_i = -500;
     error_d = cte - error_p;
     error_p = cte;
     return (k_p * error_p + k_i * error_i + k_d * error_d);
@@ -90,7 +94,7 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
 
     center = getPoint(view, obj);
 
-    errorAngle = pid(center.x - IMG_W/2 + 1);
+    errorAngle = pid(center.x - IMG_W/2 + 1) + 4;
 
     double RA = checkRoad(view)/roadArea;
     if(RA >= 0.45)
@@ -115,7 +119,7 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
     }
     if(isSign == true){
         velocity = 50;
-        if(true)
+        if(false)
             cout << endl << "turn: " << turn << "\t";
     }
     if(isSign == true && doTurn == false){
@@ -128,7 +132,7 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
         if(whitePoint/area > 0.6){
             doTurn = true;
         }
-        if(true)
+        if(false)
             cout << frame << "\tarea: " << round(whitePoint*100/area)/100;
     }
     if(frame >= (int)FPS*2){
@@ -144,7 +148,7 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
             errorAngle = 55;
         whitePointLeft = checkLeft(view1);
         whitePointRight = checkRigh(view1);
-        if(true){
+        if(false){
             cout<<index <<"\t"<<round(whitePointLeft*100/area)/100
                 <<"\t"<<round(whitePointRight*100/area)/100 
                 << "\terrorAngle: " << errorAngle<<endl;
@@ -157,18 +161,18 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
 
         if(temp < 18)
             temp = 18;
-        if(whitePointLeft/area < 0.4 && whitePointRight/area < 0.4 && index > temp){
+        if(whitePointLeft/area < 0.3 && whitePointRight/area < 0.3 && index > temp){
             index = 0;
             frame = 0;
             isSign = false;
             doTurn = false;
-            if(true){
+            if(false){
                 cout<<endl <<"Fps: "<<FPS << "\ttemp: " << temp <<endl;
                 cout<<"\n----------------------\n";
             }
         }
     }
-    if(show_val){
+    if(true){
         Mat noCut = view1.clone();
         line(noCut,center, Point(160,239), Scalar(0), 2);
         rectangle(noCut, obj, Scalar(0), -1);

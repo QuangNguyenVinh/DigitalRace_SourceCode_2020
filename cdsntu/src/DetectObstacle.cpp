@@ -84,7 +84,7 @@ vector<Vec3f> DetectObstacle::findRectSign(const Mat &depthImg)
 
     HoughCircles(dst, circles, HOUGH_GRADIENT, 1,
                      gray.rows/6,  // change this value to detect circles with different distances to each other
-                      (double)_max, (double)_min, 5, 0 // change the last two parameters
+                      (double)_max, (double)_min, 2, 15 // change the last two parameters
                 // (min_radius & max_radius) to detect larger circles
         );
 
