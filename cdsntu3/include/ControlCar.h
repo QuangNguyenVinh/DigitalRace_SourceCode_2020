@@ -8,7 +8,7 @@ class ControlCar
         static Rect null;
         ControlCar();
         ~ControlCar();
-        void driveCar(const Mat &view,const Mat &view1,int flag, bool flag2,  Rect obj);
+        void driveCar(const Mat &view,const Mat &view1,int flag, bool flag2,bool flag3,  Rect obj);
         bool flagLeftTurn = false;
         int flagRightTurn = 0;
     private:

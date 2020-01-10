@@ -38,6 +38,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
     cv_bridge::CvImagePtr cv_ptr;
     Mat out, out1, view;
     int _turn = 0 ;
+    int _turn1 = 0;
     try
     {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
@@ -51,21 +52,18 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         cout<<"circles size: " << circles.size() << endl;
         Mat graySign;
         cvtColor(cv_ptr->image, graySign, CV_BGR2GRAY);
+        _turn1 = sign->update(cv_ptr->image, circles);
         if(circles.size() != 0)
-	    //_turn = sign->classifyByColor(cv_ptr->image);
+	    
             _turn = sign->classifyByDepth(graySign,circles);
         
         //rectangle(view, rect, Scalar(0,0,255)); //Obstacles
-        
-        if(_turn == 1 || _turn == 2)
+        cout << "TurnRGB: " << _turn1 << "|| TurnDepth: " << _turn << endl;
+        if(_turn1 == 1 || _turn1 == 2)
         {   
-            
-            
-            
-            
-	    decision = _turn;
+	    decision = _turn1;
             rectangle(view, sign->draw(), Scalar(255,0,0));
-            putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),CV_FONT_HERSHEY_COMPLEX_SMALL,              0.8,Scalar(255,0,0));
+            putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),CV_FONT_HERSHEY_COMPLEX_SMALL, 0.8,Scalar(255,0,0));
             //name = to_string(check) + "_sign.jpg";
             //imwrite(name, view);
             flag2 = true;
@@ -74,6 +72,17 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         {
             
             flag2 = false;
+        }
+        if(_turn == 1 || _turn == 2)
+        {   
+            //name = to_string(check) + "_sign.jpg";
+            //imwrite(name, view);
+            flag3 = true;
+        }
+        else 
+        {
+            
+            flag3 = false;
         }
             
         
@@ -88,7 +97,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         
         //cout << "Turn: " << _turn << " Flag: " << flag2 << " Decision: " << decision << endl ;
         //cout<<white1<< "\t" << white << '\t' << flag2 << endl;
-        car->driveCar(out,out1,decision, flag2, rect);
+        car->driveCar(out,out1,decision, flag2,flag3, rect);
         cout << "Circle: " << circles.size() << endl;
         cout << "Flag: " << flag2 << endl;
         //video.write(view);

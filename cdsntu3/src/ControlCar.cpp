@@ -155,7 +155,7 @@ void ControlCar::pubSpeedAndSteer(const float &veloc, const float &angle)
     steerPub.publish(steer);
     speedPub.publish(speed);
 }
-void ControlCar::driveCar(const Mat &view, const Mat &view1, int flag, bool flag2, Rect obj)
+void ControlCar::driveCar(const Mat &view, const Mat &view1, int flag, bool flag2,bool flag3, Rect obj)
 {
     cout << "============DeBug=============" << endl;
     float errorAngle = 0 , errorSpeed;
@@ -205,7 +205,12 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1, int flag, bool flag
     {
 	demtemp++;
     }
-    if (white > 7000)
+    if (flag3 == true)
+    {
+        velocity = 50;
+        errorAngle = errorAngle + 4;
+    }
+    else if (white > 7000)
     {
         velocity = 70;
         errorAngle = errorAngle + 4;
@@ -264,7 +269,7 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1, int flag, bool flag
        
     }
     
-    if ( demtemp == 50 )
+    if ( demtemp == 50)
     {
         temp = false;
         demtemp = 0;
@@ -291,94 +296,7 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1, int flag, bool flag
     cout << "Reset_temp(=50): " << demtemp << endl;
     cout << "==============================" << endl;
    
-    /*if (temp == true && white > 15300)
-    {
-        velocity = -velocity;
-        if(turn == 1){
-                errorAngle = -30.0;
-                
-
-        }
-        if (turn == 2){
-		        errorAngle = 30.0;
-                
-        }
-        steer.data = errorAngle;
-        speed.data = velocity;
-        steerPub.publish(steer);
-        speedPub.publish(speed);
-        cout << "Slowing" << endl;
-        ros::Duration(1.2).sleep();
-        temp = false;
-    }*/
-    /*if (flag3 == true && flag2 == false)
-    {
-        velocity = -velocity;
-        if(turn == 1){
-                errorAngle = -0.0;
-                velocity = 20;
-
-        }
-        if (turn == 2){
-		        errorAngle = 0.0;
-                velocity = 20;
-        }
-        steer.data = errorAngle;
-        speed.data = velocity;
-        steerPub.publish(steer);
-        speedPub.publish(speed);
-        cout << "Slowing" << endl;
-        ros::Duration(1.3).sleep();
-        cout << speed << endl;
-    }
-   
     
-    //cout << "Slowing" << endl;
-    if(temp == true && flag2 == true)
-    {
-       if ( rectsign.y > 64 && rectsign.x >=270){
-           cout << "checkpoint1" << endl;
-           ros::Duration(0.7).sleep();
-       
-       }
-       else if (rectsign.y > 64 && rectsign.x < 270) {
-           cout << "checkpoint2" << endl;
-           
-           
-           ros::Duration(0.0).sleep();
-       }
-       else {
-           cout << "checkpoint3" << endl;velocity = 20;
-       
-        
-       }
-        if (index < frame)
-        {
-         index++;
-         if(turn == 1){
-            errorAngle = -25.0;
-            velocity = 20;
-
-        }
-        if (turn == 2){
-		    errorAngle = 25.0;
-            velocity = 20;
-        }
-        steer.data = errorAngle;
-	    speed.data = velocity;
-        steerPub.publish(steer);
-        speedPub.publish(speed);
-		cout << turn << "\t" << index << "\n";
-		if(index == frame){
-		    temp = false;
-		    turn = 0;
-		    index = 0;
-		}
-        ros::Duration(0.4).sleep();//
-        
-        }
-    }
-    */
     
     
     pubSpeedAndSteer(velocity, errorAngle);
