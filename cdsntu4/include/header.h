@@ -7,7 +7,8 @@
 #define IMG_H 240
 
 #define PI 3.14f
-#define MIN_AREA 0.0005f //For Sign Detect
+#define MIN_AREA 0.001f //For Sign Detect
+#define MAX_AREA 0.05f
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>

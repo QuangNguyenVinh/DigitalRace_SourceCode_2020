@@ -19,9 +19,9 @@ class ControlCar
         ros::Publisher steerPub;
         ros::Publisher speedPub;
         
-        float k_p = 0.9;
+        float k_p = 0.85;
         float k_i = 0.01;
-        float k_d = 0.2;
+        float k_d = 0.25;
         float inc_p = 0.01;
         float inc_i = 0.0001;
         float inc_d = 0.01;

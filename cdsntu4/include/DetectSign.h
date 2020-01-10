@@ -1,7 +1,3 @@
-//
-// Created by quang on 11/10/2019.
-//
-
 
 #ifndef DETECTSIGN_H
 #define DETECTSIGN_H
@@ -10,16 +6,29 @@
 class DetectSign
 {
 private:
+
     HOGDescriptor hog;
     Ptr<SVM> svm;
-    vector<Rect> rects;
+    int minThresholdSign[3] = {90, 40, 20};
+    int maxThresholdSign[3] = {120, 255, 180};
+    vector<vector<Point>> contours;
+
+
     Rect rectSign = Rect(0,0,0,0);
-    int useHOG_SVM(const Mat &grayImg);
+    //int classifyByDepth(const Mat &grayImg, const vector<Vec3f> circles);
+    int classifyByColor(const Mat &grayImg, const Rect rect);
+    int detect(const Mat &binImg, const Mat &grayImg);
+
+    ros::NodeHandle signNode;
+
+    ros::Publisher signPub;
 
 public:
-    DetectSign(const string svmModel);
-    int UpdateFromCircle(const Mat &src, vector<Vec3f> circles);
+    DetectSign(const string  svmModel);
+
+    int update(const Mat &src);
     Rect draw();
+    int classifyByDepth(const Mat &rgb, const vector<Vec3f> circles);
 };
 
 

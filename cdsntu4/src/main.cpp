@@ -35,7 +35,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 
     cv_bridge::CvImagePtr cv_ptr;
     Mat out, out1, view;
-    int _turn = 0 ;
+    int _turn = 0 , _turnD = 0;
     try
     {
         double current = ros::Time::now().toSec();
@@ -57,30 +57,16 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         cv_ptr->image.copyTo(rgbImg);
         treeContours = tree->findTree(cv_ptr->image);
         if(circles.size() != 0)
-	        _turn = sign->UpdateFromCircle(cv_ptr->image, circles);
-        
-        
+	        _turnD = sign->classifyByDepth(cv_ptr->image, circles);
+        _turn = sign->update(cv_ptr->image);
         if(_turn == 1 || _turn == 2){   
 	        decision = _turn;
             rectangle(view, sign->draw(), Scalar(255,0,0));
-            // putText(view, ((_turn == 1)?"left":"right"),Point(sign->draw().x,sign->draw().y),
-            //        CV_FONT_HERSHEY_COMPLEX_SMALL, 0.8,Scalar(255,0,0));
-            // if(false){
-            //     _index++;
-            //     string rgbNameOrigin = path + "/images/" + to_string(_index) + "_rgb_origin.jpg";
-            //     imwrite(rgbNameOrigin, cv_ptr->image);
-            //     string rgbName = path + "/images/" + to_string(_index) + "_rgb.jpg";
-            //     imwrite(rgbName, view);
-            //     string depthName = path + "/images/" + to_string(_index) + "_depth.jpg";
-            //     imwrite(depthName, depthImg);
-            // }
-            flag2 = true;
         }
-        else {
-            flag2 = false;
-        }
+        else
+            decision = 0;
         rectangle(view, rectObs, Scalar(0,0,255)); //Obstacles
-        car->driveCar(out,out1, velocity,decision, flag2, rectObs, FPS);
+        car->driveCar(out,out1, velocity,decision, _turnD, rectObs, FPS);
     }
     catch (cv_bridge::Exception& e)
     {

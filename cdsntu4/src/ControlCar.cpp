@@ -106,19 +106,25 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
     if(false){
         cout << "area: " << RA << "\tvelocity: " << velocity << endl;
     }
-
-    if(flag2 == true && doTurn == false){
+    //neu sign rgb != 0
+    if(flag != 0 && doTurn == false){
+        turn = flag;
+        if(!isSign)
+        cout << "wrong turn: " << turn << endl;
+    }
+    //neu sign depth != 0
+    if(flag2 != 0 && doTurn == false){
         FPS = fps;
         frame = 0;
         isSign = true;
-        turn = flag;
     }
+    // neu sign depth != 0 va doturn != 0
     if(isSign == true && doTurn == false){
         frame++;
         velocity = 50;
         if(true)
             cout << endl << "frame: " << frame << "\t" << "turn: " << turn << "\t";
-        int whitePoint;
+        int whitePoint = 0;
         if(turn == 1){
             whitePoint = turnProcess(view1, rectLeft);
             //errorAngle -= 5;
@@ -127,17 +133,20 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
             whitePoint = turnProcess(view1, rectRight);
             //errorAngle += 5;
         }
-        if(whitePoint/area > 0.6){
+        if(whitePoint/area > 0.6 && turn != 0){
             doTurn = true;
         }
     }
-    if(frame >= (int)FPS*2 && isSign == true && frame >= 15){
+    //kiem tra bien bao sai
+    if(frame >= (int)FPS*1.5 && isSign == true && frame >= 15){
         frame = 0;
         isSign = false;
+        turn = 0;
         cout<<"\nwrong sign\n";
     }
+    // bat dau cua khi doturn = true
     if(doTurn == true){
-        int whitePoint;
+        int whitePoint = 0;
         index++;
         velocity = 50;
         if(turn == 1){
@@ -145,7 +154,7 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
             whitePoint = turnProcess(view1, rectStopLeft);
         }
             
-        else if(turn == 2){
+        if(turn == 2){
             errorAngle = 55;
             whitePoint = turnProcess(view1, rectStopRight);
         }
@@ -161,6 +170,7 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
         if(whitePoint/area < 0.4 && index > temp){
             index = 0;
             frame = 0;
+            turn = 0;
             isSign = false;
             doTurn = false;
             if(true){

@@ -1,75 +1,128 @@
-//
-// Created by quang on 11/10/2019.
-//
-
 #include "DetectSign.h"
-DetectSign::DetectSign(const string svmModel){
+
+DetectSign::DetectSign(const string svmModel)
+{
     hog = HOGDescriptor(Size(32,32), Size(16,16), Size(8,8), Size(8,8), 9);
     svm = SVM::load(svmModel);
-}
+    if(show_val){
+    cvCreateTrackbar("LowH", "tb_sign", &minThresholdSign[0], 179);
+    cvCreateTrackbar("HighH", "tb_sign", &maxThresholdSign[0], 179);
 
-int DetectSign::UpdateFromCircle(const Mat &src, vector<Vec3f> circles){
-    rects.clear();
-    rects.resize(circles.size());
-    for(int i = 0; i < circles.size(); i++ ){
+    cvCreateTrackbar("LowS", "tb_sign", &minThresholdSign[1], 255);
+    cvCreateTrackbar("HighS", "tb_sign", &maxThresholdSign[1], 255);
+
+    cvCreateTrackbar("LowV", "tb_sign", &minThresholdSign[2], 255);
+    cvCreateTrackbar("HighV", "tb_sign", &maxThresholdSign[2], 255);
+    }
+}
+int DetectSign::classifyByDepth(const Mat &rgb, const vector<Vec3f> circles)
+{
+    Mat grayImg;
+    cvtColor(rgb.clone(), grayImg, CV_BGR2GRAY);
+    vector<Rect> rects(circles.size());
+    for(int i = 0; i < circles.size(); i++ )
+    {
+        Mat graySign;
         Vec3i c = circles[i];
         Point center = Point(c[0], c[1]);
         int radius = c[2];
-        Rect rect = Rect(center.x - radius, center.y - radius, 2 * radius, 2 * radius);
-        rect.x = max(0, rect.x);
-        rect.y = max(0, rect.y);
-        rect.width = min(src.size().width - 1 - rect.x, rect.width);
-        rect.height = min(src.size().height - 1 - rect.y, rect.height);
-        rects[i] = rect;
+        rects[i] = Rect(center.x - radius, center.y - radius, 2 * radius, 2 * radius);
+        //For limit rect size
+        rects[i].x = max(0, rects[i].x);
+        rects[i].y = max(0, rects[i].y);
+        rects[i].width = min(grayImg.size().width - rects[i].x, rects[i].width);
+        rects[i].height = min(grayImg.size().height - rects[i].y, rects[i].height);
+
+        resize(grayImg(rects[i]),graySign, Size(32,32));
+
+        //Change constrast
+        float alpha = 2, beta = 50;
+        graySign.convertTo(graySign, -1, alpha, beta);
+        //Remove noise
+        GaussianBlur(graySign, graySign, Size(3,3), 2, 2);
+
+        //Compute HOG
+        vector<float> descriptors;
+        hog.compute(graySign, descriptors);
+
+        Mat fm(descriptors, CV_32F);
+        
+        int flag = static_cast<int>(svm->predict(fm.t()));
+        if(flag == 1 || flag == 2)
+            return flag;
     }
+    return 0;
+}
+int DetectSign::classifyByColor(const Mat &grayImg, const Rect rect)
+{
+    Mat graySign, grayClone = grayImg.clone();
+    
+    resize(grayImg(rect),graySign, Size(32,32));
+    //Change constrast
+    float alpha = 2, beta = 50;
+    graySign.convertTo(graySign, -1, alpha, beta);
+    //Remove noise
+    GaussianBlur(graySign, graySign, Size(3,3), 2, 2);
+    //Compute HOG
+    vector<float> descriptors;
+    hog.compute(graySign, descriptors);
+
+    Mat fm(descriptors, CV_32F);
+
+    return static_cast<int>(svm->predict(fm.t()));
+
+}
+int DetectSign::detect(const Mat &binImg, const Mat &grayImg)
+{
+    contours.clear();
+    Mat dilateBin = binImg.clone();
+    //Dilate image
+    dilate(dilateBin, dilateBin, Mat::zeros(Size(3,3), CV_8UC1));
+    //Find contours;
+    vector<Vec4i> hierarchy;
+    findContours(dilateBin, contours, hierarchy, CV_RETR_EXTERNAL,CV_CHAIN_APPROX_SIMPLE, Point(0,0));
+
+    int imgArea = binImg.size().width * binImg.size().height;
+
+
+    for(size_t i = 0; i < contours.size(); i++)
+    {
+        Rect rect = boundingRect(contours[i]);
+	
+        double rectPerFrame = static_cast<double>(rect.area())/(imgArea);
+        double ratio = static_cast<double>(rect.width)/(rect.height);
+
+        if(rectPerFrame > MIN_AREA && rectPerFrame < MAX_AREA)
+            if(ratio >= 0.6 && ratio <= 1.4)
+                {
+                    int flag = classifyByColor(grayImg, rect);
+                    //int flag2 = classifyByDepth(grayImg, circles);
+                    if(flag == 1 || flag == 2)
+                    {
+                            rectSign = rect;
+                            return flag;
+                    }
+                }
+
+    }
+    return 0;
+}
+int DetectSign::update(const Mat &src)
+{
+    
     Mat hsvImg, grayImg;
     Mat dst = src.clone();
 
     cvtColor(dst, hsvImg, CV_BGR2HSV);
     cvtColor(dst, grayImg, CV_BGR2GRAY);
 
-    return useHOG_SVM(grayImg);
+    Mat binImg;
+    inRange(hsvImg, Scalar(minThresholdSign[0], minThresholdSign[1], minThresholdSign[2]) ,
+            Scalar(maxThresholdSign[0], maxThresholdSign[1], maxThresholdSign[2] ),binImg);
+    if(show_val)
+	imshow("tb_sign", binImg);
+    return detect(binImg, grayImg);
 
-}
-int DetectSign::useHOG_SVM(const Mat &grayImg)
-{
-    int flag = 0;
-    for(size_t i = 0; i < rects.size(); i++)
-    {
-        Rect rect = rects[i];
-
-        Mat graySign;
-        /*if (rect.x < 0 || rect.y < 0 || rect.x - rect.width < 0 || rect.y - rect.height < 0 ||
-            rect.x + rect.width > 320 || rect.y + rect.height > 240)
-            continue;*/
-        resize(grayImg(rect),graySign, Size(32,32)); //Resize gray image to fit model
-        //Change constrast
-        float alpha = 2, beta = 50;
-        graySign.convertTo(graySign, -1, alpha, beta);
-        //Remove noise
-        GaussianBlur(graySign, graySign, Size(3,3), 2, 2);
-        
-        //Compute HOG
-        vector<float> descriptors;
-        hog.compute(graySign, descriptors);
-
-        Mat fm(descriptors, CV_32F);
-
-        int classID = static_cast<int>(svm->predict(fm.t()));
-
-        if(classID == 1) //Turn left sign
-            flag = 1;
-
-        if(classID == 2) //Turn right sign
-            flag = 2;
-
-        if(flag != 0)
-        {
-            rectSign = rect;
-            return flag;
-        }
-    }
-    return flag;
 }
 Rect DetectSign::draw()
 {
