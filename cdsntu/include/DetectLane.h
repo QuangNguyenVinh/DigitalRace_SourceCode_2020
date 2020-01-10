@@ -24,7 +24,7 @@ class DetectLane
 
                 Rect rect = Rect(0, 0, 0, 0);
 	        int minThreshold[3] = {0, 0, 40};
-	        int maxThreshold[3] = {179, 48, 150};
+	        int maxThreshold[3] = {179, 40, 150};
 	        int minShadow[3] = {63, 0, 32};
 	        int maxShadow[3] = {179, 100, 71};
 	        int minOther[3] = {0, 0, 80};
