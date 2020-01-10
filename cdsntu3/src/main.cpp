@@ -49,9 +49,11 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         //sign->signClassify(cv_ptr->image);
 	    /*Dirty code */
         cout<<"circles size: " << circles.size() << endl;
+        Mat graySign;
+        cvtColor(cv_ptr->image, graySign, CV_BGR2GRAY);
         if(circles.size() != 0)
-	    //_turn = sign->update(cv_ptr->image);
-            _turn = sign->UpdateFromCircle(cv_ptr->image,circles);
+	    //_turn = sign->classifyByColor(cv_ptr->image);
+            _turn = sign->classifyByDepth(graySign,circles);
         
         //rectangle(view, rect, Scalar(0,0,255)); //Obstacles
         
@@ -90,6 +92,10 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         cout << "Circle: " << circles.size() << endl;
         cout << "Flag: " << flag2 << endl;
         //video.write(view);
+        if(show_val)
+        {
+        	imshow("View", view);
+        }
 
         cout<<"---------------------\n";
 	    //waitKey(1);
@@ -121,14 +127,15 @@ void depthCallback(const sensor_msgs::ImageConstPtr& msg)
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, TEAM_NAME);
-    if(show_val){
-    cv::namedWindow("steer");
-    cv::namedWindow("sign");
-    cv::namedWindow("Threshold Sign");
-    cv::namedWindow("tb_lane");
-    cv::namedWindow("threshImg");
-    cv::namedWindow("DepthBin");
-    }
+    // cv::namedWindow("steer");
+    // cv::namedWindow("sign");
+    //cv::namedWindow("Threshold Sign");
+     cv::namedWindow("tb_lane");
+    if(show_val)
+    	cv::namedWindow("threshImg");
+    // cv::namedWindow("DepthBin");
+    // cv::namedWindow("View");
+
     lane = new DetectLane();
     car = new ControlCar();
     sign = new DetectSign(svmModel);
@@ -136,7 +143,7 @@ int main(int argc, char **argv)
     obstacle = new DetectObstacle(maskSrc);
     if (true) 
     {
-        //cv::startWindowThread();
+        cv::startWindowThread();
 
         ros::NodeHandle nh;
         image_transport::ImageTransport it(nh);

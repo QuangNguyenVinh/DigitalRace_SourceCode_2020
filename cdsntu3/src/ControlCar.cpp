@@ -119,8 +119,8 @@ float ControlCar::pid(const float &cte)
     error_i += cte;
     error_d = cte - error_p;
     error_p = cte;
-    if ( error_i > 300)
-       error_i = 300;
+    if ( error_i > 500)
+       error_i = 500;
     if ( error_i < -300)
        error_i = -300;
     return (k_p * error_p + k_i * error_i + k_d * error_d);
@@ -211,12 +211,12 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1, int flag, bool flag
         errorAngle = errorAngle + 4;
     }else if (white > 6000 && white < 7000)
     {
-        velocity = 70;
+        velocity = 60;
         errorAngle = errorAngle + 4 ;
     }
     else
     {
-        velocity = 70;
+        velocity = 57;
         errorAngle = errorAngle + 4;
     }
     

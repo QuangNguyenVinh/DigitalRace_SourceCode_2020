@@ -35,8 +35,8 @@ Mat DetectLane::cutROI(const Mat &src)
     Point pts2[6] = {
             Point(0, h),
 	    Point(0, (int)(h*3/4)),
-            Point(100, 105),
-            Point(w - 100, 105),
+            Point(100, 100),
+            Point(w - 100, 100),
 	    Point(w, (int)(h*3/4)),
             Point(w, h),
     };
