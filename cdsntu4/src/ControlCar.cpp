@@ -84,7 +84,7 @@ double ControlCar::checkRoad(const Mat &src){
     return countNonZero(road);
 }
 
-void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int flag, bool flag2, Rect obj, float fps){
+void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int decision, bool flag2, Rect obj, float fps){
     std_msgs::Float32 steer, speed;
     float errorAngle;
 
@@ -100,31 +100,48 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
     else if (RA >= 0.35)
         velocity = velocity - 10;
     else if (RA >= 0.25)
-        velocity = velocity - 15;
+        velocity = velocity - 20;
     else
         velocity = velocity - 20;
-    if(false){
-        cout << "area: " << RA << "\tvelocity: " << velocity << endl;
-    }
-    //neu sign rgb != 0
-    if(flag != 0 && doTurn == false){
-        turn = flag;
-        if(!isSign)
-        cout << "wrong turn: " << turn << endl;
-    }
-    //neu sign depth != 0
-    if(flag2 != 0 && doTurn == false){
-        FPS = fps;
+    //-----------
+    if(flag2 == true && doTurn == false){
         frame = 0;
-        isSign = true;
+        FPS = fps;
+        haveSign = true;
     }
-    // neu sign depth != 0 va doturn != 0
-    if(isSign == true && doTurn == false){
+    if(haveSign == true && doTurn == false){
         frame++;
         velocity = 50;
         if(true)
             cout << endl << "frame: " << frame << "\t" << "turn: " << turn << "\t";
+    }
+    //kiem tra bien bao sai
+    if(frame >= (int)FPS*1.5 && haveSign == true && frame >= 15){
+        frame = 0;
+        haveSign = false;
+        turn = 0;
+        cout<<"\nwrong sign DEPTH\n";
+    }
+    //--------------
+    //neu sign rgb != 0
+    if(decision != 0 && doTurn == false){
+        _frame = 0;
+        turn = decision;
+        FPS = fps;
+        isSign = true;
+        if(!haveSign)
+            cout << "not have turn: " << turn << endl;
+    }
+    if(_frame >= (int)FPS*1.5 && turn != 0 && _frame >= 15){
+        _frame = 0;
+        turn = 0;
+        cout<<"\nwrong sign RGB\n";
+    }
+
+    // neu sign depth != 0 va doturn != 0
+    if(isSign == true && doTurn == false){
         int whitePoint = 0;
+        _frame++;
         if(turn == 1){
             whitePoint = turnProcess(view1, rectLeft);
             //errorAngle -= 5;
@@ -136,13 +153,6 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
         if(whitePoint/area > 0.6 && turn != 0){
             doTurn = true;
         }
-    }
-    //kiem tra bien bao sai
-    if(frame >= (int)FPS*1.5 && isSign == true && frame >= 15){
-        frame = 0;
-        isSign = false;
-        turn = 0;
-        cout<<"\nwrong sign\n";
     }
     // bat dau cua khi doturn = true
     if(doTurn == true){
@@ -171,6 +181,7 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int f
             index = 0;
             frame = 0;
             turn = 0;
+            haveSign = false;
             isSign = false;
             doTurn = false;
             if(true){
