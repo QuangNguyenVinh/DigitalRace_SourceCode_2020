@@ -100,9 +100,14 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int d
     else if (RA >= 0.35)
         velocity = velocity - 10;
     else if (RA >= 0.25)
-        velocity = velocity - 20;
+        velocity = velocity - 15;
     else
         velocity = velocity - 20;
+
+    // velocity = 45;
+    // if(RA <= 0.25)
+    //     velocity = velocity - 5;
+    
     //-----------
     if(flag2 == true && doTurn == false){
         frame = 0;
@@ -141,6 +146,7 @@ void ControlCar::driveCar(const Mat &view, const Mat &view1,float velocity,int d
     // neu sign depth != 0 va doturn != 0
     if(isSign == true && doTurn == false){
         int whitePoint = 0;
+        velocity = 50;
         _frame++;
         if(turn == 1){
             whitePoint = turnProcess(view1, rectLeft);

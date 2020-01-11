@@ -120,7 +120,17 @@ int DetectSign::update(const Mat &src)
     inRange(hsvImg, Scalar(minThresholdSign[0], minThresholdSign[1], minThresholdSign[2]) ,
             Scalar(maxThresholdSign[0], maxThresholdSign[1], maxThresholdSign[2] ),binImg);
     if(show_val)
-	imshow("tb_sign", binImg);
+	    imshow("tb_sign", binImg);
+
+    Mat temp = Mat::zeros(binImg.size(), binImg.type());
+    Point pts[4] = {
+            Point(160, 50),
+            Point(300, 50),
+            Point(300, 95),
+            Point(160, 95),
+    };
+    fillConvexPoly(temp, pts, 4, Scalar(255));
+    bitwise_and(binImg, temp, binImg);
     return detect(binImg, grayImg);
 
 }

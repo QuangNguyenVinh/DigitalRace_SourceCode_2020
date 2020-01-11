@@ -23,6 +23,7 @@ bool flag2 = false;
 bool flag3 = false;
 int decision = 0;
 vector<Vec3f> circles;
+vector<int> _sign;
 
 int frame = 1;
 double start = 0;
@@ -36,6 +37,7 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
     cv_bridge::CvImagePtr cv_ptr;
     Mat out, out1, view;
     int _turn = 0 , _turnD = 0;
+    int temp = 0;
     try
     {
         double current = ros::Time::now().toSec();
@@ -61,12 +63,27 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
         _turn = sign->update(cv_ptr->image);
         if(_turn == 1 || _turn == 2){   
 	        decision = _turn;
+            _sign.push_back(1);
             rectangle(view, sign->draw(), Scalar(255,0,0));
         }
-        else
-            decision = 0;
+        else {
+            _sign.push_back(0);
+        }
+
+        flag2 = false;
+        if(_sign.size() > 2)
+            if(_sign[_sign.size()-1] == 0 && _sign[_sign.size()-2] == 1) flag2 = true;
+            else flag2 = false;
+        if(flag2 == true)
+	    {
+            temp = decision;
+		    _sign.clear();
+	    }
+        rectangle(view, Rect(160, 50, 140, 45), Scalar(255,255,255));
         rectangle(view, rectObs, Scalar(0,0,255)); //Obstacles
-        car->driveCar(out,out1, velocity,decision, _turnD, rectObs, FPS);
+        if(show_val)
+            imshow("view", view);
+        car->driveCar(out,out1, velocity, temp, _turnD, rectObs, FPS);
     }
     catch (cv_bridge::Exception& e)
     {

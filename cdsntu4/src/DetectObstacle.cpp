@@ -89,8 +89,8 @@ vector<Vec3f> DetectObstacle::RectSign(const Mat &depthImg){
     Point pts[4] = {
             Point(160, 50),
             Point(300, 50),
-            Point(300, 125),
-            Point(160, 125),
+            Point(300, 95),
+            Point(160, 95),
     };
     fillConvexPoly(temp, pts, 4, Scalar(255));
     bitwise_and(gray, temp, dst);
