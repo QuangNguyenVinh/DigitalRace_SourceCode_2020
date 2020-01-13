@@ -1,0 +1,3 @@
+- chạy roslauch cdsntu4 cdsntu4.launch
+- khi nào terminal hiện dòng chữ "READY" thì code đã sẵn sàng chạy
+- điền teamname vào simulator là cdsntu4
